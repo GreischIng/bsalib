@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<VisualStudioProject ProjectType="typeStaticLibrary" ProjectCreator="Intel Fortran" Keyword="Static Library" Version="11.0" ProjectIdGuid="{E8F0C036-A71F-4781-BC31-9F9371C56891}">
+	<Platforms>
+		<Platform Name="Win32"/>
+		<Platform Name="x64"/>
+	</Platforms>
+	<Configurations>
+		<Configuration Name="Debug|Win32" ConfigurationType="typeStaticLibrary">
+			<Tool Name="VFFortranCompilerTool" SuppressStartupBanner="true" DebugInformationFormat="debugEnabled" Optimization="optimizeDisabled" WarnInterfaces="true" Traceback="true" BoundsCheck="true" StackFrameCheck="true" RuntimeLibrary="rtMultiThreadedDebugDLL"/>
+			<Tool Name="VFLibrarianTool"/>
+			<Tool Name="VFResourceCompilerTool"/>
+			<Tool Name="VFMidlTool" SuppressStartupBanner="true"/>
+			<Tool Name="VFCustomBuildTool"/>
+			<Tool Name="VFPreLinkEventTool"/>
+			<Tool Name="VFPreBuildEventTool"/>
+			<Tool Name="VFPostBuildEventTool"/>
+		</Configuration>
+		<Configuration Name="Debug|x64" OutputDirectory="$(PlatformName)" IntermediateDirectory=".\$(Platform)" ConfigurationType="typeStaticLibrary">
+			<Tool Name="VFFortranCompilerTool" SuppressStartupBanner="true" Optimization="optimizeFull" InlineFunctionExpansion="expandOnlyInline" Preprocess="preprocessYes" AdditionalIncludeDirectories=".\src\CONSTANTS;" PreprocessorDefinitions="BSA_USE_SVD_METHOD;INT64" OpenMP="OpenMPParallelCode" WarnInterfaces="true" IntegerKIND="integerKIND8" RealKIND="realKIND8" RuntimeLibrary="rtMultiThreadedDebugDLL"/>
+			<Tool Name="VFLibrarianTool"/>
+			<Tool Name="VFResourceCompilerTool"/>
+			<Tool Name="VFMidlTool" SuppressStartupBanner="true" TargetEnvironment="midlTargetAMD64"/>
+			<Tool Name="VFCustomBuildTool"/>
+			<Tool Name="VFPreLinkEventTool"/>
+			<Tool Name="VFPreBuildEventTool"/>
+			<Tool Name="VFPostBuildEventTool"/>
+		</Configuration>
+		<Configuration Name="Release|Win32" ConfigurationType="typeStaticLibrary">
+			<Tool Name="VFFortranCompilerTool" SuppressStartupBanner="true" RuntimeLibrary="rtMultiThreadedDLL"/>
+			<Tool Name="VFLibrarianTool"/>
+			<Tool Name="VFResourceCompilerTool"/>
+			<Tool Name="VFMidlTool" SuppressStartupBanner="true"/>
+			<Tool Name="VFCustomBuildTool"/>
+			<Tool Name="VFPreLinkEventTool"/>
+			<Tool Name="VFPreBuildEventTool"/>
+			<Tool Name="VFPostBuildEventTool"/>
+		</Configuration>
+		<Configuration Name="Release|x64" ConfigurationType="typeStaticLibrary">
+			<Tool Name="VFFortranCompilerTool" SuppressStartupBanner="true" RuntimeLibrary="rtMultiThreadedDLL"/>
+			<Tool Name="VFLibrarianTool"/>
+			<Tool Name="VFResourceCompilerTool"/>
+			<Tool Name="VFMidlTool" SuppressStartupBanner="true" TargetEnvironment="midlTargetAMD64"/>
+			<Tool Name="VFCustomBuildTool"/>
+			<Tool Name="VFPreLinkEventTool"/>
+			<Tool Name="VFPreBuildEventTool"/>
+			<Tool Name="VFPostBuildEventTool"/>
+		</Configuration>
+	</Configurations>
+	<Files>
+		<Filter Name="Header Files" Filter="fi;fd"/>
+		<Filter Name="Resource Files" Filter="rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe"/>
+		<Filter Name="Source Files" Filter="f90;for;f;fpp;ftn;def;odl;idl">
+		<File RelativePath=".\BsaLib\src\CONSTANTS\_CONSTANTS.F90"/>
+		<File RelativePath=".\BsaLib\src\bsa\meshing\zones\_shared_poly2d.fi"/>
+		<File RelativePath=".\BsaLib\src\bsa\classic\BsaClassicImpl.F90"/>
+		<File RelativePath=".\BsaLib\src\IO\BsaIO.F90"/>
+		<File RelativePath=".\BsaLib\src\IO\BsaIOImpl.F90"/>
+		<File RelativePath=".\BsaLib\src\BsaLib.F90"/>
+		<File RelativePath=".\BsaLib\src\bsa\data\BsaLibData.F90"/>
+		<File RelativePath=".\BsaLib\src\bsa\data\BsaLibDataImpl.F90"/>
+		<File RelativePath=".\BsaLib\src\bsa\BsaLibImpl.F90"/>
+		<File RelativePath=".\BsaLib\src\bsa\meshing\BsaMesherImpl.F90"/>
+		<File RelativePath=".\BsaLib\src\CONSTANTS\CONSTANTS.F90"/>
+		<File RelativePath=".\BsaLib\src\bsa\functions\functions.F90"/>
+		<File RelativePath=".\BsaLib\src\bsa\functions\functionsImpl.F90"/>
+		<File RelativePath=".\BsaLib\src\bsa\meshing\zones\M2DPolygZone.F90"/>
+		<File RelativePath=".\BsaLib\src\bsa\meshing\point\MPoint.F90"/>
+		<File RelativePath=".\BsaLib\src\bsa\meshing\policy\MPolicy.F90"/>
+		<File RelativePath=".\BsaLib\src\bsa\meshing\zones\MRectZone.F90"/>
+		<File RelativePath=".\BsaLib\src\bsa\meshing\zones\MRectZoneImpl.F90"/>
+		<File RelativePath=".\BsaLib\src\bsa\meshing\zones\MTriangZone.F90"/>
+		<File RelativePath=".\BsaLib\src\bsa\meshing\zones\MTriangZoneImpl.F90"/>
+		<File RelativePath=".\BsaLib\src\bsa\meshing\zones\MZone.F90"/>
+		<File RelativePath=".\BsaLib\src\settings\Settings.F90"/>
+		<File RelativePath=".\BsaLib\src\settings\SettingsImpl.F90"/>
+		<File RelativePath=".\BsaLib\src\structure\StructureData.F90"/>
+		<File RelativePath=".\BsaLib\src\structure\StructureImpl.F90"/>
+		<File RelativePath=".\BsaLib\src\timing\Timer.F90"/>
+		<File RelativePath=".\BsaLib\src\utils\utility.F90"/>
+		<File RelativePath=".\BsaLib\src\wind\WindPSDImpl.F90"/>
+		<File RelativePath=".\BsaLib\src\wind\WindSetImpl.F90"/>
+		<File RelativePath=".\BsaLib\src\wind\WindType.F90"/></Filter>
+	</Files>
+	<Globals/>
+</VisualStudioProject>

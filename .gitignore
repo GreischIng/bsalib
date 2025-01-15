@@ -1,0 +1,67 @@
+# Prerequisites
+*.d
+
+# Compiled Object files
+*.slo
+*.lo
+*.o
+*.obj
+
+# Precompiled Headers
+*.gch
+*.pch
+
+# Compiled Dynamic libraries
+*.so
+*.dylib
+*.dll
+
+# Fortran module files
+*.mod
+*.smod
+
+# Compiled Static libraries
+*.lai
+*.la
+*.a
+*.lib
+
+# Executables
+*.exe
+*.out
+*.app
+
+# after pre-processor
+*.i90
+
+# Visual Studio
+.vs/
+**/*.suo
+**/*.u2d
+**/*.pdb
+**/*BuildLog*
+**/*.manifest
+
+# CUSTOM
+.vscode/
+**/*_help.txt
+**/*.lnk
+**/*.user
+**/*.help
+**/fort.*
+*.exp
+**/*.ilk
+**/*.idb
+**/__pycache__
+compile.bat
+plotter/
+build*/
+.fortls*
+images/
+My *
+compile_flags.txt
+readme_files/
+resources/
+scripts/
+docs/
+misc/
