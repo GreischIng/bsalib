@@ -168,6 +168,7 @@ contains
             allocate(MSHR_SVD_WORK(MSHR_SVD_LWORK), stat=istat, errmsg=emsg)
             if (istat /= 0) call allocKOMsg('MSHR_SVD_WORK', istat, emsg)
          endif
+         MSHR_SVD_WORK=0
          return ! correct execution flow
       endif
 
