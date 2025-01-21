@@ -101,10 +101,8 @@ contains
 
 
    module subroutine prefetchSVDWorkDim_()
-      real(bsa_real_t) :: tmpmat(NNODESL, NNODESL)
-      ! real(bsa_real_t), allocatable :: tmpmat(:, :)
-
-      real(bsa_real_t), dimension(NNODESL) :: tmpv
+      real(bsa_real_t), allocatable :: tmpmat(:, :)    ! Eric
+      real(bsa_real_t), allocatable :: tmpv(:)
 
       real(bsa_real_t), dimension(1) :: optWork
       real(bsa_real_t), dimension(1) :: tmp1arr
@@ -116,8 +114,18 @@ contains
          allocate(MSHR_SVD_INFO, stat=istat, errmsg=emsg)
          if (istat /= 0) call allocKOMsg('MSHR_SVD_INFO', istat, emsg)
       endif
+      if (.not. allocated(tmpmat)) then
+         allocate(tmpmat(NNODESL, NNODESL), stat=istat, errmsg=emsg)
+         if (istat /= 0) call allocKOMsg('tmpmat', istat, emsg)
+      endif
+      if (.not. allocated(tmpv)) then
+         allocate(tmpv(NNODESL), stat=istat, errmsg=emsg)
+         if (istat /= 0) call allocKOMsg('tmpv', istat, emsg)
+      endif
 
       MSHR_SVD_INFO = 0
+      tmpmat = 0.  ! Eric
+      tmpv = 0.    ! Eric
       
 #ifdef BSA_USE_SVD_METHOD
    call POD__(&
