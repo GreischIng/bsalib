@@ -13,49 +13,26 @@
 !!
 !! You should have received a copy of the GNU General Public License
 !! along with BsaLib.  If not, see <https://www.gnu.org/licenses/>.
-#ifdef INT32
-   integer, parameter, private :: IK = int32
-#elif INT64
-   integer, parameter, private :: IK = int64
-#else
-   integer, parameter, private :: IK = int32
-#endif
-
-#ifdef BSA_SINGLE_FLOATING_PRECISION
-   integer, parameter, public :: RK = real32
-#else
-   integer, parameter, public :: RK = real64
-#endif
-
-
-!**************************************************************************************
-!   BSA  integer/real types selected kinds
-!**************************************************************************************
-
-   integer, parameter :: bsa_int_t  = IK
-   integer, parameter :: bsa_real_t = RK
-
-
 
 !**************************************************************************************
 !   BSA  GENERICS
 !**************************************************************************************
 
-   integer(IK), parameter :: BSA_SPATIAL_SYM_NONE = 0_IK
-   integer(IK), parameter :: BSA_SPATIAL_SYM_HALF = 2_IK
-   integer(IK), parameter :: BSA_SPATIAL_SYM_FOUR = 4_IK
+   integer, parameter :: BSA_SPATIAL_SYM_NONE = 0
+   integer, parameter :: BSA_SPATIAL_SYM_HALF = 2
+   integer, parameter :: BSA_SPATIAL_SYM_FOUR = 4
 
-   integer(IK), parameter :: BSA_PREMESH_TYPE_DIAG_CREST_NO  = 0_IK
-   integer(IK), parameter :: BSA_PREMESH_TYPE_DIAG_CREST_YES = 1_IK
+   integer, parameter :: BSA_PREMESH_TYPE_DIAG_CREST_NO  = 0
+   integer, parameter :: BSA_PREMESH_TYPE_DIAG_CREST_YES = 1
 
-   integer(IK), parameter :: BSA_PREMESH_MODE_BASE         = 0_IK
-   integer(IK), parameter :: BSA_PREMESH_MODE_ZONE_REFINED = 1_IK
+   integer, parameter :: BSA_PREMESH_MODE_BASE         = 0
+   integer, parameter :: BSA_PREMESH_MODE_ZONE_REFINED = 1
 
-   integer(IK), parameter :: BSA_CLASSIC_MODE_VECTOR = 0_IK
-   integer(IK), parameter :: BSA_CLASSIC_MODE_SCALAR = 1_IK
+   integer, parameter :: BSA_CLASSIC_MODE_VECTOR = 0
+   integer, parameter :: BSA_CLASSIC_MODE_SCALAR = 1
 
-   integer(IK), parameter :: BSA_PSD_CONVENTION_FREQ = 0_IK
-   integer(IK), parameter :: BSA_PSD_CONVENTION_PULS = 1_IK
+   integer, parameter :: BSA_PSD_CONVENTION_FREQ = 0
+   integer, parameter :: BSA_PSD_CONVENTION_PULS = 1
 
 !**************************************************************************************
 !   BSA  I/O  DEFAULTS
@@ -83,13 +60,13 @@
 !   WIND
 !**************************************************************************************
 
-   integer(IK), parameter :: BSA_WIND_VERT_PROFILE_POWER = 1_IK
-   integer(IK), parameter :: BSA_WIND_VERT_PROFILE_LOG   = 2_IK
+   integer, parameter :: BSA_WIND_VERT_PROFILE_POWER = 1
+   integer, parameter :: BSA_WIND_VERT_PROFILE_LOG   = 2
 
-   integer(IK), parameter :: BSA_WIND_PSD_VONKARMAN = 1_IK
-   integer(IK), parameter :: BSA_WIND_PSD_KAIMAL    = 2_IK
-   integer(IK), parameter :: BSA_WIND_PSD_DAVENPORT = 5_IK
-   ! integer(IK), parameter :: BSA_WIND_PSD_DAVENPORT_FIXED = 3_IK
+   integer, parameter :: BSA_WIND_PSD_VONKARMAN = 1
+   integer, parameter :: BSA_WIND_PSD_KAIMAL    = 2
+   integer, parameter :: BSA_WIND_PSD_DAVENPORT = 5
+   ! integer, parameter :: BSA_WIND_PSD_DAVENPORT_FIXED = 3
 
 
 !**************************************************************************************
@@ -142,14 +119,14 @@
 !  EXPORT CONSTANTs
 !**************************************************************************
 
-   integer(IK), parameter :: BSA_EXPORT_FORMAT_FORMATTED   = 0_IK
-   integer(IK), parameter :: BSA_EXPORT_FORMAT_UNFORMATTED = 1_IK
-   integer(IK), parameter :: BSA_EXPORT_MODE_REPLACE = 0_IK
-   integer(IK), parameter :: BSA_EXPORT_MODE_APPEND  = 1_IK
+   integer, parameter :: BSA_EXPORT_FORMAT_FORMATTED   = 0
+   integer, parameter :: BSA_EXPORT_FORMAT_UNFORMATTED = 1
+   integer, parameter :: BSA_EXPORT_MODE_REPLACE = 0
+   integer, parameter :: BSA_EXPORT_MODE_APPEND  = 1
 
-   integer(IK), parameter :: BSA_EXPORT_BRM_MODE_NONE = 0_IK
-   integer(IK), parameter :: BSA_EXPORT_BRM_MODE_BASE = 1_IK
-   integer(IK), parameter :: BSA_EXPORT_BRM_MODE_USR  = 9_IK
+   integer, parameter :: BSA_EXPORT_BRM_MODE_NONE = 0
+   integer, parameter :: BSA_EXPORT_BRM_MODE_BASE = 1
+   integer, parameter :: BSA_EXPORT_BRM_MODE_USR  = 9
 
 
    character(len = *), parameter :: BSA_EXPORT_M2MF_CLS_FNAME   = "m2mf_cls"
@@ -171,12 +148,11 @@
 
    abstract interface
       subroutine exportInterf_vect_(f1, f2, brm, pdata)
-         import :: bsa_real_t
-         real(bsa_real_t), intent(in)  :: f1(:)
+         real, intent(in)  :: f1(:)
             !! Array of frequencies along the X-axis
-         real(bsa_real_t), intent(in)  :: f2(:)
+         real, intent(in)  :: f2(:)
             !! Array of frequencies along the Y-axis
-         real(bsa_real_t), intent(in)  :: brm(:, :)
+         real, intent(in)  :: brm(:, :)
             !! Data of bispectra
          class(*), pointer, intent(in) :: pdata
             !! Unlimited polymorphic object allowinf the user to pass any kind of 
@@ -194,18 +170,18 @@
 
    !> @note To avoid assertion errors in Mesher due to `sin()`/`cos()` intrinsic functions 
    !>  rounding errors.
-   real(RK), parameter :: MACHINE_PRECISION = 1e-12_RK
+   real, parameter :: MACHINE_PRECISION = 1e-12
 
-   real(RK), parameter :: CST_PIGREC = 4.0_RK * atan(1.0_RK)
+   real, parameter :: CST_PIGREC = 4.0 * atan(1.0)
 
-   real(RK), parameter :: CST_PIt2   = CST_PIGREC * 2.0_RK
-   real(RK), parameter :: CST_PIt4   = CST_PIGREC * 4.0_RK
+   real, parameter :: CST_PIt2   = CST_PIGREC * 2.0
+   real, parameter :: CST_PIt4   = CST_PIGREC * 4.0
 
-   real(RK), parameter :: CST_PId2   = CST_PIGREC / 2.0_RK
-   real(RK), parameter :: CST_PId4   = CST_PIGREC / 4.0_RK
+   real, parameter :: CST_PId2   = CST_PIGREC / 2.0
+   real, parameter :: CST_PId4   = CST_PIGREC / 4.0
 
 
-   real(RK), parameter :: CST_2d3    = 2.0_RK / 3.0_RK
-   real(RK), parameter :: CST_3d2    = 3.0_RK / 2.0_RK
-   real(RK), parameter :: CST_PIt3d2 = CST_PIGREC * CST_3d2
+   real, parameter :: CST_2d3    = 2.0 / 3.0
+   real, parameter :: CST_3d2    = 3.0 / 2.0
+   real, parameter :: CST_PIt3d2 = CST_PIGREC * CST_3d2
 

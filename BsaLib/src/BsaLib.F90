@@ -79,7 +79,7 @@ module BsaLib
          ! </ul>
          ! </span>
 
-         integer(bsa_int_t), value :: isym
+         integer, value :: isym
       end subroutine
 
 
@@ -107,7 +107,7 @@ module BsaLib
          ! tensor-elements symmetry is automatically disabled.
          ! <span>
 
-         integer(bsa_int_t), value :: ispctrsym
+         integer, value :: ispctrsym
       end subroutine
 
 
@@ -128,7 +128,7 @@ module BsaLib
          ! @endwarning
          ! </span>
 
-         integer(bsa_int_t), value :: itype
+         integer, value :: itype
       end subroutine
 
 
@@ -142,7 +142,7 @@ module BsaLib
          ! </ul>
          ! </span>
 
-         integer(bsa_int_t), value :: imode
+         integer, value :: imode
       end subroutine
 
 
@@ -185,7 +185,7 @@ module BsaLib
          ! 
          !  </span>
 
-         integer(bsa_int_t), intent(in) :: indexes(3)
+         integer, intent(in) :: indexes(3)
             !# <span style="white-space: pre-line">
             ! Array of indexes.
             ! Specify indexing combination of the bispectra to be exported.
@@ -349,7 +349,7 @@ module BsaLib
          ! invalidated, since this API call has higher precedence (more accurate, specifies energy content).
          ! </span>
 
-         real(bsa_real_t), value :: rval
+         real, value :: rval
             !! Energy threshold limit, in the range \(\mathtt{rval} \in [0, \dots, 1] \).
             !! If `0` is passed, all energy is kept (i.e. no truncation, as \(\mathtt{rval} = 1\)).
             !! If \(\mathtt{rval}\) is passed in the range \([0, \dots, 100]\%\), it is automatically rescaled
@@ -369,7 +369,7 @@ module BsaLib
          ! as well, since that call would automatically invalidate this one (higher precedence).
          ! </span>
 
-         integer(bsa_int_t), value :: nmodes
+         integer, value :: nmodes
             !! number of POD modes (\(\le \mathtt{NNL}\)), with \(\mathtt{NNL}\) 
             !! number of effectively loaded nodes.
       end subroutine
@@ -401,21 +401,21 @@ module BsaLib
          ! a <code>null()</code> argument can be passed.
          ! </span>
 
-         real(bsa_real_t), target, allocatable, dimension(:) :: m2mf_cls
+         real, target, allocatable, dimension(:) :: m2mf_cls
             !! \(2^{\mathrm{nd}}\) order moments, modal forces, \(\mathtt{Classic}\) approach
-         real(bsa_real_t), target, allocatable, dimension(:) :: m2mr_cls
+         real, target, allocatable, dimension(:) :: m2mr_cls
             !! \(2^{\mathrm{nd}}\) order moments, modal responses, \(\mathtt{Classic}\) approach
-         real(bsa_real_t), target, allocatable, dimension(:) :: m2o2mr_cls
+         real, target, allocatable, dimension(:) :: m2o2mr_cls
             !! \(2^{\mathrm{nd}}\) order spectral moments, modal responses, \(\mathtt{Classic}\) approach
-         real(bsa_real_t), target, allocatable, dimension(:) :: m3mf_msh
+         real, target, allocatable, dimension(:) :: m3mf_msh
             !! \(3^{\mathrm{rd}}\) order moments, modal forces, \(\mathtt{Mesher}\) approach
-         real(bsa_real_t), target, allocatable, dimension(:) :: m3mr_msh
+         real, target, allocatable, dimension(:) :: m3mr_msh
             !! \(3^{\mathrm{rd}}\) order moments, modal responses, \(\mathtt{Mesher}\) approach
-         real(bsa_real_t), target, allocatable, dimension(:) :: m3mf_cls
+         real, target, allocatable, dimension(:) :: m3mf_cls
             !! \(3^{\mathrm{rd}}\) order moments, modal forces, \(\mathtt{Classic}\) approach
-         real(bsa_real_t), target, allocatable, dimension(:) :: m3mr_cls
+         real, target, allocatable, dimension(:) :: m3mr_cls
             !! \(3^{\mathrm{rd}}\) order moments, modal responses, \(\mathtt{Classic}\) approach
-         integer(bsa_int_t), intent(out), optional :: ierr
+         integer, intent(out), optional :: ierr
       end subroutine
 
 
@@ -471,7 +471,7 @@ module BsaLib
          !   <li>\(\mathtt{Both}\)</li>
          ! </ol>
          ! </span>
-         integer(bsa_int_t), value :: isuban
+         integer, value :: isuban
       end subroutine
 
 
@@ -500,7 +500,7 @@ module BsaLib
          ! </ol>
          ! </span>
 
-         integer(bsa_int_t), value :: i_mode
+         integer, value :: i_mode
       end subroutine
 
 
@@ -508,7 +508,7 @@ module BsaLib
          !! @warning
          !! Deprecated.
 
-         integer(bsa_int_t), value :: ivers
+         integer, value :: ivers
       end subroutine
 
 
@@ -534,7 +534,7 @@ module BsaLib
          ! By DEFAULT, <code>BsaLib</code> uses the convention on <i>pulsations</i> (<code>BSA_PSD_CONVENTION_FREQ</code>).
          ! </span>
 
-         integer(bsa_int_t), value :: iconv
+         integer, value :: iconv
       end subroutine
 
 
@@ -542,9 +542,9 @@ module BsaLib
       module subroutine bsa_setSpectraComputation(ipsd, ibisp)
          !! Gives control on which kind of spectral features are computed.
 
-         integer(bsa_int_t), value :: ipsd
+         integer, value :: ipsd
             !! If \(1\), activates computation of Spectra (\(2^{\mathrm{nd}}\) order statisitcs)
-         integer(bsa_int_t), value :: ibisp
+         integer, value :: ibisp
             !! If \(1\), activates computation of Bispectra (\(3^{\mathrm{rd}}\) order statisitcs)
       end subroutine
 
@@ -570,7 +570,7 @@ module BsaLib
          ! By DEFAULT, <code>BsaLib</code> performs a <code>FULL</code> analysis.
          ! </span>
 
-         integer(bsa_int_t), value :: ionlydiag
+         integer, value :: ionlydiag
       end subroutine
 
 
@@ -584,7 +584,7 @@ module BsaLib
          ! Use with care.
          ! <span>
 
-         integer(bsa_int_t), value :: itest
+         integer, value :: itest
       end subroutine
 
 
@@ -599,7 +599,7 @@ module BsaLib
          ! meet some minimum accuracy requirements.
          ! </span>
 
-         integer(bsa_int_t), value :: nfreqs
+         integer, value :: nfreqs
             !# <span style="white-space: pre-line">
             !  number of discretisation points (i.e. n. of frequencies) 
             !
@@ -608,7 +608,7 @@ module BsaLib
             ! If the <i>pulsations</i> convention is used (<code>BSA_PSD_CONVENTION_PULS</code>),
             ! then this number will be automatically actualised to the interval \([-f_{max},f_{max}]\).
             ! <span>
-         real(bsa_real_t), value :: df
+         real, value :: df
             !# <span style="white-space: pre-line">
             ! Spacing between discretisation points (i.e. delta \(\Delta f\))
             ! </span>
@@ -621,32 +621,32 @@ module BsaLib
          ! Main setup data for the \(\mathtt{Mesher}\) approach.
          ! </span>
 
-         integer(bsa_int_t), value :: isvd
+         integer, value :: isvd
             !! If `1`, enables use of POD techniques to decompose 
             !! Cross-Spectral-Density-Matrices of base wind turbulence.
-         integer(bsa_int_t), value :: bkgrfmt
+         integer, value :: bkgrfmt
             !! Defines the base n. of refinement points \(N_{bkg}\) used to mesh the 
             !! background (quasi-static) zone, placed at the origin \((0, 0)\).
             !!
             !! @note
             !! Several other zones' discretisation depend on this value.
-         real(bsa_real_t), value :: bkgaext
+         real, value :: bkgaext
             !! Defines the factor by which the background zone is extended.
             !! This is done to allow the user extending this zone, avoiding cutting
             !! the zone's extensions where gradients are still important.
             !! Acts as a safety factor.
-         real(bsa_real_t), value :: genpaext
+         real, value :: genpaext
             !! Defines the factor by which the any peak zone is extended.
             !! Same reasons as for the background zone.
-         real(bsa_real_t), value :: maxaext
+         real, value :: maxaext
             !! Defines the factor by which the total covered area \(f_{max}\) is extended.
             !! In this case, this is done to avoid loosing information coming from the 
             !! secondary peaks, which are usually placed at extensions up to \(2\cdot f_i\),
             !! where \(f_i\) is the \(i-\)th modal frequency.
-         integer(bsa_int_t), value :: ifcov
+         integer, value :: ifcov
             !! @warning
             !! Deprecated
-         integer(bsa_int_t), value :: idumpmod
+         integer, value :: idumpmod
             !! If `1`, includes modal data in the `dumpfile`.
             !!
             !! @note
@@ -663,8 +663,8 @@ module BsaLib
    ! **************************************
 
       module subroutine bsa_setWindDirections(dirs, ndirs)
-         integer(bsa_int_t), intent(in) :: dirs(:)
-         integer(bsa_int_t), value, optional :: ndirs
+         integer, intent(in) :: dirs(:)
+         integer, value, optional :: ndirs
       end subroutine
 
 
@@ -674,10 +674,10 @@ module BsaLib
          ! in the definition of wind loads, and for which PSDs will be computed.
          ! </span>
 
-         integer(bsa_int_t), intent(in) :: tc(:)
+         integer, intent(in) :: tc(:)
             !! Array of components. Each array element value should 
             !! be equal to one of \(\{1:u,\ 2:v,\ 3:w\}\).
-         integer(bsa_int_t), value, optional :: ntc
+         integer, value, optional :: ntc
             !! total n. of turbulent components to consider.
       end subroutine
 
@@ -695,7 +695,7 @@ module BsaLib
          !       </li>
          ! </ol>
          ! </span>
-         integer(bsa_int_t), value :: iwprof
+         integer, value :: iwprof
       end subroutine
 
 
@@ -713,7 +713,7 @@ module BsaLib
          !       </li>
          ! </ul>
          ! </span>
-         integer(bsa_int_t), value :: ipsd
+         integer, value :: ipsd
       end subroutine
 
 
@@ -728,7 +728,7 @@ module BsaLib
          ! are determined.
          ! </span>
 
-         integer(bsa_int_t), value :: ivert
+         integer, value :: ivert
             !! Axis index, with value among one of \(\{1:x,2:y,3:z\}\).
       end subroutine
 
@@ -751,11 +751,11 @@ module BsaLib
          ! </span>
 
 #if  ((defined(__INTEL_COMPILER_BUILD_DATE)) && (__INTEL_COMPILER_BUILD_DATE >= 20221019))
-         real(bsa_real_t), intent(in) :: lim(..)
-         integer(bsa_int_t), intent(in), optional :: ilim(..)
+         real, intent(in) :: lim(..)
+         integer, intent(in), optional :: ilim(..)
 #else
-         real(bsa_real_t), intent(in), target     :: lim(:)
-         integer(bsa_int_t), intent(in), optional :: ilim(:)   ! limits' index passed
+         real, intent(in), target     :: lim(:)
+         integer, intent(in), optional :: ilim(:)   ! limits' index passed
 #endif
       end subroutine
 
@@ -765,7 +765,7 @@ module BsaLib
          !! Specifies a custom value for air density \(\rho_{air}\). 
          !! Defaults to \(1.225 \ \mathrm{kg/m^3}\).
 
-         real(bsa_real_t), value :: aird
+         real, value :: aird
       end subroutine
 
 
@@ -777,7 +777,7 @@ module BsaLib
          ! For those, see <code>[[bsalib(module):bsa_setwzrotmatw2g(interface)]]</code>.
          ! </span>
 
-         real(bsa_real_t), intent(in) :: rotW2G(3, 3)
+         real, intent(in) :: rotW2G(3, 3)
       end subroutine
 
 
@@ -785,7 +785,7 @@ module BsaLib
       module subroutine bsa_setWZMeanWindVel(mat)
          !! Defines mean wind speeds \(\overline{U}\), for each wind zone.
 
-         real(bsa_real_t), target, intent(in) :: mat(:)
+         real, target, intent(in) :: mat(:)
       end subroutine
 
 
@@ -793,7 +793,7 @@ module BsaLib
       module subroutine bsa_setWZRefAlt(Zref)
          !! Defines reference altitudes \(z_{ref}\), for each wind zone.
 
-         real(bsa_real_t), target, intent(in) :: Zref(:)
+         real, target, intent(in) :: Zref(:)
       end subroutine
 
 
@@ -807,7 +807,7 @@ module BsaLib
          ! for each wind zone.
          ! </span>
 
-         real(bsa_real_t), target, intent(in) :: L(3, 3, *)
+         real, target, intent(in) :: L(3, 3, *)
       end subroutine
 
 
@@ -819,7 +819,7 @@ module BsaLib
          ! $$ I_{\{u,v,w\}} = \frac{\sigma_{\{u,v,w\}}}{\overline{U}} $$
          ! </span>
 
-         real(bsa_real_t), target, intent(in) :: sigma(3, *)
+         real, target, intent(in) :: sigma(3, *)
       end subroutine
 
 
@@ -833,7 +833,7 @@ module BsaLib
          ! used in the decreasing-exponential formulation of wind spatial coherence.
          ! </span>
 
-         real(bsa_real_t), target, intent(in) :: ccoeffs(3, 3, *)
+         real, target, intent(in) :: ccoeffs(3, 3, *)
       end subroutine
 
 
@@ -847,7 +847,7 @@ module BsaLib
          ! used in the decreasing-exponential formulation of wind spatial coherence.
          ! </span>
 
-         real(bsa_real_t), target, intent(in) :: cexpn(3, 3, *)
+         real, target, intent(in) :: cexpn(3, 3, *)
       end subroutine
 
 
@@ -857,7 +857,7 @@ module BsaLib
          ! Defines wind mean incidence angle \(\overline{i}\), for each wind zone.
          ! </span>
 
-         real(bsa_real_t), target, intent(in) :: incang(:)
+         real, target, intent(in) :: incang(:)
       end subroutine
 
 
@@ -868,7 +868,7 @@ module BsaLib
          ! This to allow different principal wind flow directions for each wond zone.
          ! </span>
 
-         real(bsa_real_t), target, intent(in) :: rotW2G_L(3, 3, *)
+         real, target, intent(in) :: rotW2G_L(3, 3, *)
       end subroutine
 
 
@@ -893,7 +893,7 @@ module BsaLib
          ! <b>Will be deprecated</b>
          ! </span>
 
-         real(bsa_real_t), target, intent(in) :: Unod(:)
+         real, target, intent(in) :: Unod(:)
       end subroutine
 
 
@@ -906,7 +906,7 @@ module BsaLib
          ! <b>Will be deprecated</b>
          ! </span>
 
-         integer(bsa_int_t), target, intent(in) :: NodWZ(:)
+         integer, target, intent(in) :: NodWZ(:)
       end subroutine
 
 
@@ -923,7 +923,7 @@ module BsaLib
          ! <b>Will be deprecated</b>
          ! </span>
 
-         real(bsa_real_t), target, intent(in) :: WnodAlt(:)
+         real, target, intent(in) :: WnodAlt(:)
       end subroutine
 
 
@@ -933,7 +933,7 @@ module BsaLib
          !! @warning
          !! <b>Will be deprecated</b>
 
-         real(bsa_real_t), target, intent(in) :: nodCorr(:, :)
+         real, target, intent(in) :: nodCorr(:, :)
       end subroutine
 
 
@@ -942,7 +942,7 @@ module BsaLib
          !! @warning
          !! <b>Will be deprecated</b>
 
-         real(bsa_real_t), target, intent(in) :: wfc(:, :, :)
+         real, target, intent(in) :: wfc(:, :, :)
             !! Dimensions should be [nlibs_l, ndegw+3, nnodes_l]
       end subroutine
 
@@ -951,7 +951,7 @@ module BsaLib
          !! @warning
          !! <b>Will be deprecated</b>
 
-         real(bsa_real_t), target, intent(in) :: phiTc(:, :, :)
+         real, target, intent(in) :: phiTc(:, :, :)
       end subroutine
 
 
@@ -966,9 +966,9 @@ module BsaLib
       module subroutine bsa_setNodalCoords(nn, coords)
          !! Provides nodal spatial coordinates.
 
-         integer(bsa_int_t), value :: nn
+         integer, value :: nn
             !! total number of nodes.
-         real(bsa_real_t), target, contiguous :: coords(:, :)
+         real, target, contiguous :: coords(:, :)
             !! Dimensions `[3, nn]`, where `3` refers to the 3 spatial 
             !! directions \(\{x,y,z\}\).
       end subroutine
@@ -981,7 +981,7 @@ module BsaLib
          ! where \(\mathtt{NN}\) is the total number of structural nodes, 
          ! \(\mathtt{NNDOFs}\) the number of degrees-of-freedom per node.
          ! </span>
-         integer(bsa_int_t), value :: ndofs
+         integer, value :: ndofs
       end subroutine
 
 
@@ -990,7 +990,7 @@ module BsaLib
          ! Sets number of total degrees-of-freedom per node \(\mathtt{NNDOFs}\).
          ! </span>
 
-         integer(bsa_int_t), value :: nndofs
+         integer, value :: nndofs
       end subroutine
 
 
@@ -1000,7 +1000,7 @@ module BsaLib
          ! Sets number of total structural nodes \(\mathtt{NN}\).
          ! </span>
 
-         integer(bsa_int_t), value :: nn
+         integer, value :: nn
       end subroutine
 
 
@@ -1015,13 +1015,13 @@ module BsaLib
          ! loaded nodal DOFs to the maximum, \(\mathtt{NNDOFs}\) (see <code>[[bsalib(module):bsa_setnumofnodaldofs(interface)]]</code>).
          ! </span>
 
-         integer(bsa_int_t), intent(in), target, allocatable :: libs_l(:)
+         integer, intent(in), target, allocatable :: libs_l(:)
              !! Array of loaded nodal DOFs.
              !! @note
              !! Each array element value must be included in the range 
              !! \{[1, \mathtt{NNDOFs}]\}, where \(\mathtt{NNDOFs}\) is the total 
              !! n. of nodal degrees-of-freedom (see <code>[[bsalib(module):bsa_setnumofnodaldofs(interface)]]</code>).
-         integer(bsa_int_t), value, optional :: nlibs_l
+         integer, value, optional :: nlibs_l
              !! N. of passed loaded nodal DOFs.
       end subroutine
 
@@ -1037,8 +1037,8 @@ module BsaLib
          ! loaded nodes to match all nodes, \(\mathtt{NN}\) (see <code>[[bsalib(module):bsa_settotalnofnodes(interface)]]</code>).
          ! </span>
 
-         integer(bsa_int_t), intent(in), target, allocatable :: nodes_l(:)
-         integer(bsa_int_t), value, optional :: nn_l
+         integer, intent(in), target, allocatable :: nodes_l(:)
+         integer, value, optional :: nn_l
       end subroutine
 
 
@@ -1058,8 +1058,8 @@ module BsaLib
          ! If for any reason, a value mismatch is caught, <code>BsaLib</code> wil throw an internal error.
          ! </span>
 
-         integer(bsa_int_t), value :: ndofs, nm
-         real(bsa_real_t), intent(in), target :: Phi(ndofs, nm), natf(nm)
+         integer, value :: ndofs, nm
+         real, intent(in), target :: Phi(ndofs, nm), natf(nm)
       end subroutine
 
 
@@ -1074,7 +1074,7 @@ module BsaLib
          ! without requiring to bother to much on how the modal vibration information is given.
          ! </span>
 
-         integer(bsa_int_t), intent(in) :: modes(:)
+         integer, intent(in) :: modes(:)
       end subroutine
 
 
@@ -1106,12 +1106,12 @@ module BsaLib
          ! Therefore, only the diagonal elements are required by <code>BsaLib</code>.
          ! </span>
 
-         integer(bsa_int_t), value :: nm
+         integer, value :: nm
             !! n. of vibration modes
             !! @note Should match with the one given in <code>[[bsalib(module):bsa_setmodalinfo(interface)]]</code>.
-         real(bsa_real_t), intent(in), target, dimension(nm) :: Mgen, Kgen
+         real, intent(in), target, dimension(nm) :: Mgen, Kgen
             !! 
-         real(bsa_real_t), intent(in), target :: Cgen(nm, nm)
+         real, intent(in), target :: Cgen(nm, nm)
       end subroutine
 
 
@@ -1125,7 +1125,7 @@ module BsaLib
          ! to aerodynamic damping in case of wind loading, etc.
          ! </span>
 
-         real(bsa_real_t), target, intent(in) :: xsi(:)
+         real, target, intent(in) :: xsi(:)
       end subroutine
 
 
@@ -1137,7 +1137,7 @@ module BsaLib
          ! This is directly linked to <code>[[bsalib(module):bsa_dovalidatemodaldata(interface)]]</code>, 
          ! or <code>[[bsalib(module):bsa_setkeptmodalshapes(interface)]]</code> (even though this last 
          ! API call contains the same info, provided by the user).
-         integer(bsa_int_t), allocatable :: modes(:)
+         integer, allocatable :: modes(:)
       end function
 
 
@@ -1155,8 +1155,8 @@ module BsaLib
          ! @note
          ! This is an API call to be used in a post-processing phase.
 
-         real(bsa_real_t), intent(in)  :: m2mf(:)
-         real(bsa_real_t), allocatable, intent(out) :: bkg(:), res(:)
+         real, intent(in)  :: m2mf(:)
+         real, allocatable, intent(out) :: bkg(:), res(:)
       end subroutine
 
 
@@ -1168,13 +1168,13 @@ module BsaLib
          ! @note
          ! This is an API call to be used in a post-processing phase.
 
-         real(bsa_real_t), intent(in)  :: m2(:)
-         real(bsa_real_t), intent(in)  :: m2o2(:)
-         real(bsa_real_t), intent(in)  :: obs_time
-         real(bsa_real_t), allocatable, intent(inout) :: peak_g(:)
-         real(bsa_real_t), allocatable, intent(in)    :: sk(:)
-         real(bsa_real_t), allocatable, intent(inout) :: peak_ng_pos(:)
-         real(bsa_real_t), allocatable, intent(inout), optional :: peak_ng_neg(:)
+         real, intent(in)  :: m2(:)
+         real, intent(in)  :: m2o2(:)
+         real, intent(in)  :: obs_time
+         real, allocatable, intent(inout) :: peak_g(:)
+         real, allocatable, intent(in)    :: sk(:)
+         real, allocatable, intent(inout) :: peak_ng_pos(:)
+         real, allocatable, intent(inout), optional :: peak_ng_neg(:)
       end subroutine
 
 
@@ -1204,7 +1204,7 @@ module BsaLib
          !! Sets unit to be used for the output file. 
          !! Useful if needed to use an already opened unit from hosting program unit.
 
-         integer(bsa_int_t), value :: iunit
+         integer, value :: iunit
       end subroutine
 
 
@@ -1222,7 +1222,7 @@ module BsaLib
          !! Defines the desired format (e.g. `FORMATTED/UNFORMATTED`) to be used when exporting 
          !! statistical moments to files.
 
-         integer(bsa_int_t), value :: iform
+         integer, value :: iform
             !! Format flag, see `BSA_EXPORT_FORMAT_*`.
       end subroutine
 
@@ -1231,7 +1231,7 @@ module BsaLib
       module subroutine bsa_setExportAppendMode(imode)
          !! @warning Deprecated.
 
-         integer(bsa_int_t), value :: imode
+         integer, value :: imode
       end subroutine
 
 
@@ -1258,7 +1258,7 @@ module BsaLib
          !! (see <code>[[bsalib(module):bsa_computebrdecomp(interface)]]</code>).
 
          character(len = *), intent(in) :: fname
-         real(bsa_real_t), intent(in)   :: bkg(:), res(:), xsi(:)
+         real, intent(in)   :: bkg(:), res(:), xsi(:)
       end subroutine
 
 
@@ -1270,7 +1270,7 @@ module BsaLib
          !! Uses a `FORMATTED` output.
 
          character(len = *), intent(in) :: fname
-         real(bsa_real_t), intent(in)   :: vec(:)
+         real, intent(in)   :: vec(:)
       end subroutine
 
 
@@ -1282,7 +1282,7 @@ module BsaLib
          !! Uses a `FORMATTED` output.
 
          character(len = *), intent(in) :: fname
-         real(bsa_real_t), intent(in)   :: sk(:)
+         real, intent(in)   :: sk(:)
       end subroutine
 
 
@@ -1293,7 +1293,7 @@ module BsaLib
          !! Uses a `FORMATTED` output.
 
          character(len = *), intent(in)  :: fname
-         integer(bsa_int_t), value       :: dim
+         integer, value       :: dim
             !# @note `dim` represents the principal dimension of the square tensors of 
             ! 2nd and 3rd statistical moments.
             ! So that:
@@ -1304,8 +1304,8 @@ module BsaLib
             !         (i.e. as if they were computed in a non-FULL case).
             !         Then, the correct indexes are computed internally. </li>
             ! </ul>
-         real(bsa_real_t), intent(in) :: m2(:)
-         real(bsa_real_t), intent(in) :: m3(:)
+         real, intent(in) :: m2(:)
+         real, intent(in) :: m3(:)
       end subroutine
 
 
@@ -1317,8 +1317,8 @@ module BsaLib
          !! Uses a `FORMATTED` output.
 
          character(len = *), intent(in) :: fname
-         real(bsa_real_t),   intent(in) :: psd(:, :)
-         real(bsa_real_t),   intent(in), optional :: f(:)
+         real,   intent(in) :: psd(:, :)
+         real,   intent(in), optional :: f(:)
       end subroutine
 
 
@@ -1330,7 +1330,7 @@ module BsaLib
          !! Uses a `FORMATTED` output.
 
          character(len = *), intent(in) :: fname
-         real(bsa_real_t), intent(in)   :: bisp(:, :, :)
+         real, intent(in)   :: bisp(:, :, :)
       end subroutine
 
 
@@ -1342,7 +1342,7 @@ module BsaLib
          !! Uses a `FORMATTED` output.
 
          character(len = *), intent(in)  :: fname
-         real(bsa_real_t), intent(in), target, optional :: coords(:, :)
+         real, intent(in), target, optional :: coords(:, :)
       end subroutine
 
 
@@ -1364,7 +1364,7 @@ module BsaLib
          !! Uses a `FORMATTED` output.
 
          character(len = *), intent(in) :: fname
-         real(bsa_real_t), intent(in) :: rvar(:)
+         real, intent(in) :: rvar(:)
       end subroutine
 
 
@@ -1382,7 +1382,7 @@ module BsaLib
          !! <b>All</b> bispectra are exported, so expect to have big files generated.
          !! @endwarning
 
-         integer(bsa_int_t), value :: imode
+         integer, value :: imode
       end subroutine
 
 
@@ -1407,13 +1407,13 @@ module BsaLib
 ! **************************************************************************************
    interface
       module subroutine mainClassic_(m2mf_cls, m2mr_cls, m2o2mr_cls, m3mf_cls, m3mr_cls)
-         real(bsa_real_t), allocatable, intent(inout), target :: &
+         real, allocatable, intent(inout), target :: &
             m2mf_cls(:), m2mr_cls(:), m2o2mr_cls(:), m3mf_cls(:), m3mr_cls(:)
       end subroutine
 
 
       module subroutine mainMesher_(m3mf_msh, m3mr_msh)
-         real(bsa_real_t), target, allocatable :: m3mf_msh(:), m3mr_msh(:)
+         real, target, allocatable :: m3mf_msh(:), m3mr_msh(:)
       end subroutine
    end interface
 

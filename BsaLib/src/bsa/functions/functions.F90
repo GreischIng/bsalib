@@ -22,15 +22,15 @@ module BsaLib_Functions
    private :: wd, struct_data, settings, dimM_bisp_, dimM_psd_
 
    ! make a local internal copy
-   integer(bsa_int_t) :: NFREQS, NNODES, NNODESL, NLIBS, NLIBSL
-   integer(bsa_int_t) :: NMODES, NMODES_EFF
-   integer(bsa_int_t) :: NPSDEL, NTCOMPS, NDIRS = 1
-   integer(bsa_int_t), allocatable :: MODES(:)
-   integer(bsa_int_t), allocatable :: TCOMPS(:), DIRS(:)
+   integer :: NFREQS, NNODES, NNODESL, NLIBS, NLIBSL
+   integer :: NMODES, NMODES_EFF
+   integer :: NPSDEL, NTCOMPS, NDIRS = 1
+   integer, allocatable :: MODES(:)
+   integer, allocatable :: TCOMPS(:), DIRS(:)
 
    integer              :: MSHR_SVD_LWORK = - 1
-   integer, allocatable :: MSHR_SVD_INFO
-   real(bsa_real_t), allocatable :: MSHR_SVD_WORK(:)
+   integer, allocatable  :: MSHR_SVD_INFO        
+   real, allocatable :: MSHR_SVD_WORK(:)
 
 
    interface
@@ -48,35 +48,35 @@ module BsaLib_Functions
 
 
       module subroutine getFM_full_tnm_scalar_msh_(bfm, fi, fj)
-         real(bsa_real_t), intent(inout), contiguous :: bfm(:, :)
-         real(bsa_real_t), intent(in), contiguous :: fi(:), fj(:)
+         real, intent(inout), contiguous :: bfm(:, :)
+         real, intent(in), contiguous :: fi(:), fj(:)
       end subroutine
 
 
       module subroutine getFM_full_tm_scalar_msh_POD_(bfm, fi, fj)
-         real(bsa_real_t), intent(inout), contiguous :: bfm(:, :)
-         real(bsa_real_t), intent(in), contiguous :: fi(:), fj(:)
+         real, intent(inout), contiguous :: bfm(:, :)
+         real, intent(in), contiguous :: fi(:), fj(:)
       end subroutine
 
 
       module subroutine getRM_full_scalar_msh_(brm, fi, fj, bfm)
-         real(bsa_real_t), intent(inout), contiguous :: brm(:, :)
-         real(bsa_real_t), intent(in), contiguous :: fi(:), fj(:)
-         real(bsa_real_t), intent(in), contiguous :: bfm(:, :)
+         real, intent(inout), contiguous :: brm(:, :)
+         real, intent(in), contiguous :: fi(:), fj(:)
+         real, intent(in), contiguous :: bfm(:, :)
       end subroutine
 
 
 
       module subroutine getFM_diag_tnm_scalar_msh_(bfm, fi, fj)
-         real(bsa_real_t), intent(inout), contiguous :: bfm(:, :)
-         real(bsa_real_t), intent(in), contiguous :: fi(:), fj(:)
+         real, intent(inout), contiguous :: bfm(:, :)
+         real, intent(in), contiguous :: fi(:), fj(:)
       end subroutine
 
 
       module subroutine getRM_diag_scalar_msh_(brm, fi, fj, bfm)
-         real(bsa_real_t), intent(inout), contiguous :: brm(:, :)
-         real(bsa_real_t), intent(in), contiguous :: fi(:), fj(:)
-         real(bsa_real_t), intent(in), contiguous :: bfm(:, :)
+         real, intent(inout), contiguous :: brm(:, :)
+         real, intent(in), contiguous :: fi(:), fj(:)
+         real, intent(in), contiguous :: bfm(:, :)
       end subroutine
 
 
@@ -88,31 +88,31 @@ module BsaLib_Functions
 
 
       module subroutine getFM_full_tnm_vect_cls_(f, Suvw, psd, bisp)
-         real(bsa_real_t), intent(in) :: f(NFREQS)
-         real(bsa_real_t), intent(in) :: Suvw(NFREQS, NPSDEL)
-         real(bsa_real_t), allocatable, intent(inout) :: psd(:, :), bisp(:, :, :)
+         real, intent(in) :: f(NFREQS)
+         real, intent(in) :: Suvw(NFREQS, NPSDEL)
+         real, allocatable, intent(inout) :: psd(:, :), bisp(:, :, :)
       end subroutine
 
 
 
       module subroutine getRM_full_vect_cls_(f, psd, bisp)
-         real(bsa_real_t), intent(in)                 :: f(NFREQS)
-         real(bsa_real_t), allocatable, intent(inout) :: psd(:, :), bisp(:, :, :)
+         real, intent(in)                 :: f(NFREQS)
+         real, allocatable, intent(inout) :: psd(:, :), bisp(:, :, :)
       end subroutine
 
 
 
       module subroutine getFM_diag_tnlm_vect_cls_(f, Suvw, psd, bisp)
-         real(bsa_real_t), intent(in) :: f(NFREQS)
-         real(bsa_real_t), intent(in) :: Suvw(NFREQS, NPSDEL)
-         real(bsa_real_t), intent(inout), allocatable :: psd(:, :), bisp(:, :, :)
+         real, intent(in) :: f(NFREQS)
+         real, intent(in) :: Suvw(NFREQS, NPSDEL)
+         real, intent(inout), allocatable :: psd(:, :), bisp(:, :, :)
       end subroutine   
 
 
 
       module subroutine getRM_diag_vect_cls_(f, psd, bisp)
-         real(bsa_real_t), intent(in)                 :: f(NFREQS)
-         real(bsa_real_t), allocatable, intent(inout) :: psd(:, :), bisp(:, :, :)
+         real, intent(in)                 :: f(NFREQS)
+         real, allocatable, intent(inout) :: psd(:, :), bisp(:, :, :)
       end subroutine
 
 
@@ -122,20 +122,20 @@ module BsaLib_Functions
 
 
       pure module subroutine getFM_full_tnm_scalar_cls_(ii, ij, fi, fj, Suvw, Suvw_pad, psd, bisp)
-         integer(bsa_int_t), intent(in)  :: ii, ij
-         real(bsa_real_t), intent(in)    :: fi, fj
-         real(bsa_real_t), intent(in)    :: Suvw(NFREQS, NPSDEL)
-         real(bsa_real_t), intent(in)    :: Suvw_pad(NPSDEL)
-         real(bsa_real_t), intent(inout) :: psd(dimM_psd_), bisp(dimM_bisp_)
+         integer, intent(in)  :: ii, ij
+         real, intent(in)    :: fi, fj
+         real, intent(in)    :: Suvw(NFREQS, NPSDEL)
+         real, intent(in)    :: Suvw_pad(NPSDEL)
+         real, intent(inout) :: psd(dimM_psd_), bisp(dimM_bisp_)
       end subroutine
 
 
 
       module subroutine getRM_full_scalar_cls_(ii, ij, fi, fj, psdin, psdout, bispin, bispout)
-         integer(bsa_int_t), intent(in) :: ii, ij
-         real(bsa_real_t), intent(in)   :: fi, fj
-         real(bsa_real_t), intent(in)   :: psdin(dimM_psd_), bispin(dimM_bisp_)
-         real(bsa_real_t), intent(out)  :: psdout(dimM_psd_), bispout(dimM_bisp_)
+         integer, intent(in) :: ii, ij
+         real, intent(in)   :: fi, fj
+         real, intent(in)   :: psdin(dimM_psd_), bispin(dimM_bisp_)
+         real, intent(out)  :: psdout(dimM_psd_), bispout(dimM_bisp_)
       end subroutine
 
 
@@ -143,29 +143,29 @@ module BsaLib_Functions
       !>      convention on PULSATION.
       !>      Please, adapt it to the case of convention over FREQUENCIES.
       pure module subroutine getFM_diag_tnlm_scalar_cls_(ii, ij, fi, fj, Suvw, Suvw_pad, psd, bisp)
-         integer(bsa_int_t), intent(in)  :: ii, ij
-         real(bsa_real_t), intent(in)    :: fi, fj
-         real(bsa_real_t), intent(in)    :: Suvw(NFREQS, NPSDEL)
-         real(bsa_real_t), intent(in)    :: Suvw_pad(NPSDEL)
-         real(bsa_real_t), intent(inout) :: psd(dimM_psd_), bisp(dimM_bisp_)
+         integer, intent(in)  :: ii, ij
+         real, intent(in)    :: fi, fj
+         real, intent(in)    :: Suvw(NFREQS, NPSDEL)
+         real, intent(in)    :: Suvw_pad(NPSDEL)
+         real, intent(inout) :: psd(dimM_psd_), bisp(dimM_bisp_)
       end subroutine
 
 
 
       module subroutine getRM_diag_scalar_cls_(ii, ij, fi, fj, psdin, psdout, bispin, bispout)
-         integer(bsa_int_t), intent(in) :: ii, ij  ! freqs indexes
-         real(bsa_real_t), intent(in)   :: fi, fj
-         real(bsa_real_t), intent(in)   :: psdin(dimM_psd_), bispin(dimM_bisp_)
-         real(bsa_real_t), intent(out)  :: psdout(dimM_psd_), bispout(dimM_bisp_)
+         integer, intent(in) :: ii, ij  ! freqs indexes
+         real, intent(in)   :: fi, fj
+         real, intent(in)   :: psdin(dimM_psd_), bispin(dimM_bisp_)
+         real, intent(out)  :: psdout(dimM_psd_), bispout(dimM_bisp_)
       end subroutine
 
 
 
 
       pure module subroutine getBR_SFm_val_(nm, Suvw, fnat, im, m, psd)
-         integer(bsa_int_t), intent(in)  :: im, m, nm
-         real(bsa_real_t), intent(in)    :: Suvw(nm, NPSDEL), fnat
-         real(bsa_real_t), intent(inout) :: psd
+         integer, intent(in)  :: im, m, nm
+         real, intent(in)    :: Suvw(nm, NPSDEL), fnat
+         real, intent(inout) :: psd
       end subroutine
 
    end interface

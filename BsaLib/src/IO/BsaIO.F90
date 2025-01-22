@@ -61,7 +61,7 @@ module BsaLib_IO
       end subroutine
 
       module function io_readBsaInputParams() result(ret)
-         integer(bsa_int_t) :: ret
+         integer :: ret
       end function
 
       module subroutine io_printUserData()
@@ -114,7 +114,7 @@ contains
 
    subroutine io_exportMomentToFile(fname, vec, form)
       character(len = *), intent(in) :: fname
-      real(bsa_real_t), intent(in)   :: vec(:)
+      real, intent(in)   :: vec(:)
       character(len = *), intent(in), optional :: form
       integer :: iun, i, dim
 

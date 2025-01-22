@@ -30,9 +30,9 @@ module BsaLib_Data
 
    interface
       module function evaluatePSD(f, nf, itc) result(psd)
-         integer(bsa_int_t), intent(in) :: nf, itc
-         real(bsa_real_t), intent(in)   :: f(nf)
-         real(bsa_real_t), allocatable, target :: psd(:, :)
+         integer, intent(in) :: nf, itc
+         real, intent(in)   :: f(nf)
+         real, allocatable, target :: psd(:, :)
       end function
 
       module subroutine cleanBSAData_()
@@ -70,11 +70,11 @@ module BsaLib_Data
    !> Controls if we need to validate modal data or not.
    logical :: do_validate_modal_ = .true.
 
-   integer(bsa_int_t) :: dimNf_psd_ = 0, dimNf_bisp_ = 0
-   integer(bsa_int_t) :: dimNr_psd_ = 0, dimNr_bisp_ = 0
-   integer(bsa_int_t) :: dimM_psd_  = 0, dimM_bisp_  = 0
+   integer :: dimNf_psd_ = 0, dimNf_bisp_ = 0
+   integer :: dimNr_psd_ = 0, dimNr_bisp_ = 0
+   integer :: dimM_psd_  = 0, dimM_bisp_  = 0
 
-   real(bsa_real_t), allocatable, target :: PHItimesC_local_(:, :, :)
+   real, allocatable, target :: PHItimesC_local_(:, :, :)
 
    !> If true, in Run, only generates compatible files for BSA executable
    logical :: do_gen_bsa_input_files_ = .false.
@@ -83,7 +83,7 @@ module BsaLib_Data
    logical :: do_run_bsalib_ = .true.
 
    !> Keeps track of max n. of OMP threads. 1 (main) thread by default.
-   integer(bsa_int_t) :: max_num_omp_threads_ = 1_bsa_int_t
+   integer :: max_num_omp_threads_ = 1
 
 
 ! **********************************************************************
@@ -97,13 +97,13 @@ module BsaLib_Data
    ! BUG: unused!
    ! TODO: if visual for modal bisp, we don't need to compute the full set.
    !> Modal dimensions in Post phase.
-   integer(bsa_int_t) :: dimM_psd_post_, dimM_bisp_post_
+   integer :: dimM_psd_post_, dimM_bisp_post_
 
    !> If true, post-mesh for generating Bispectrums.
    logical :: is_visual_ = .false.
 
    !> Stores visual indexes (both modal and nodal)
-   integer(bsa_int_t), target :: visual_indexes_(3) = 0
+   integer, target :: visual_indexes_(3) = 0
 
    ! BUG: this only valid for nodal visual mode (make it more general)
    !> If visual, allows to export Nodal Bispectrum instead of modal
@@ -113,26 +113,26 @@ module BsaLib_Data
    integer :: bisp_export_iun_internal_ = 0
 
    !> Final offset indexing value in visual mode
-   integer(bsa_int_t), target :: visual_idx_ = 1
+   integer, target :: visual_idx_ = 1
 
    !> If true, exports all BRM data to file (NOT visual!)
    logical :: do_export_brm_ = .false.
 
-   integer(bsa_int_t) :: i_brmexport_mode_ = BSA_EXPORT_BRM_MODE_BASE
+   integer :: i_brmexport_mode_ = BSA_EXPORT_BRM_MODE_BASE
 
    !> Base exporting data type
    type, public :: BsaExportBaseData_t
 
-      integer(bsa_int_t) :: i_doNotPrintGenHeader_ = 0   ! == 0  means DO PRINT !!
-      integer(bsa_int_t) :: ncomb_  = 0
-      integer(bsa_int_t) :: ispsym_ = 0
-      integer(bsa_int_t) :: nzones_ = 0
-      integer(bsa_int_t) :: nm_     = 0
-      integer(bsa_int_t), pointer :: modes_(:) => null()
+      integer :: i_doNotPrintGenHeader_ = 0   ! == 0  means DO PRINT !!
+      integer :: ncomb_  = 0
+      integer :: ispsym_ = 0
+      integer :: nzones_ = 0
+      integer :: nm_     = 0
+      integer, pointer :: modes_(:) => null()
 
-      integer(bsa_int_t) :: idZone_ = 0
-      integer(bsa_int_t) :: nI_     = 0
-      integer(bsa_int_t) :: nJ_     = 0
+      integer :: idZone_ = 0
+      integer :: nI_     = 0
+      integer :: nJ_     = 0
    end type
 
    !> Function pointer to Bispectrum exporting procedure
@@ -145,9 +145,8 @@ module BsaLib_Data
    procedure(getBRN_), pointer :: getBRN => null()
    abstract interface
       function getBRN_(brm)
-         import :: bsa_real_t
-         real(bsa_real_t), intent(in) :: brm(:)
-         real(bsa_real_t) :: getBRN_
+         real, intent(in) :: brm(:)
+         real :: getBRN_
       end function
    end interface
 
@@ -159,7 +158,7 @@ module BsaLib_Data
 
    logical :: is_gpu_enabled_ = .false.
 #ifdef BSA_USE_GPU
-   integer(bsa_int_t), target :: ierr_cl_
+   integer, target :: ierr_cl_
 #endif
 
 
@@ -170,7 +169,7 @@ module BsaLib_Data
 
    logical :: force_cls_execution_ = .false.
    integer(int64), parameter :: MAX_VECT_ALLOC_ELEMS = 1000000000 ! 1B -> almost 8Gb
-   integer(bsa_int_t) :: ifr = 0, jfr = 0
+   integer :: ifr = 0, jfr = 0
    ! real(RDP), pointer :: m2mf_cls_ptr_(:), m2mr_cls_ptr_(:)   ! 2nd order moments
    ! real(RDP), pointer :: m3mf_cls_ptr_(:), m3mr_cls_ptr_(:)   ! 3rd order moments
 
@@ -178,16 +177,16 @@ module BsaLib_Data
    procedure(getBRMClsVect), pointer :: getBRM_vect_cls => null()
    abstract interface
       subroutine getBFMClsVect(f, Suvw, psd, bisp)
-         import :: bsa_real_t, settings, struct_data, wd
-         real(bsa_real_t), intent(in) :: f(settings%nfreqs_)
-         real(bsa_real_t), intent(in) :: Suvw(settings%nfreqs_, struct_data%nn_load_ * wd%i_ndirs_ * wd%i_ntc_)
-         real(bsa_real_t), allocatable, intent(inout) :: psd(:, :), bisp(:, :, :)
+         import :: settings, struct_data, wd
+         real, intent(in) :: f(settings%nfreqs_)
+         real, intent(in) :: Suvw(settings%nfreqs_, struct_data%nn_load_ * wd%i_ndirs_ * wd%i_ntc_)
+         real, allocatable, intent(inout) :: psd(:, :), bisp(:, :, :)
       end subroutine
 
       subroutine getBRMClsVect(f, psd, bisp)
-         import :: bsa_real_t, settings
-         real(bsa_real_t), intent(in)                 :: f(settings%nfreqs_)
-         real(bsa_real_t), allocatable, intent(inout) :: psd(:, :), bisp(:, :, :)
+         import :: settings
+         real, intent(in)                 :: f(settings%nfreqs_)
+         real, allocatable, intent(inout) :: psd(:, :), bisp(:, :, :)
       end subroutine
    end interface
 
@@ -196,21 +195,21 @@ module BsaLib_Data
    procedure(getBRMClsScalar), pointer :: getBRM_scalar_cls => null()
    abstract interface
       pure subroutine getBFMClsScalar(ii, ij, fi, fj, Suvw, Suvw_pad, psd, bisp)
-         import :: bsa_int_t, bsa_real_t, dimM_psd_, dimM_bisp_
+         import :: dimM_psd_, dimM_bisp_
          import :: settings, struct_data, wd
-         integer(bsa_int_t), intent(in)  :: ii, ij
-         real(bsa_real_t), intent(in)    :: fi, fj
-         real(bsa_real_t), intent(in)    :: Suvw(settings%nfreqs_, struct_data%nn_load_ * wd%i_ndirs_ * wd%i_ntc_)
-         real(bsa_real_t), intent(in)    :: Suvw_pad(struct_data%nn_load_ * wd%i_ndirs_ * wd%i_ntc_)
-         real(bsa_real_t), intent(inout) :: psd(dimM_psd_), bisp(dimM_bisp_)
+         integer, intent(in)  :: ii, ij
+         real, intent(in)    :: fi, fj
+         real, intent(in)    :: Suvw(settings%nfreqs_, struct_data%nn_load_ * wd%i_ndirs_ * wd%i_ntc_)
+         real, intent(in)    :: Suvw_pad(struct_data%nn_load_ * wd%i_ndirs_ * wd%i_ntc_)
+         real, intent(inout) :: psd(dimM_psd_), bisp(dimM_bisp_)
       end subroutine
 
       subroutine getBRMClsScalar(ii, ij, fi, fj, psdin, psdout, bispin, bispout)
-         import :: bsa_int_t, bsa_real_t, dimM_psd_, dimM_bisp_
-         integer(bsa_int_t), intent(in) :: ii, ij
-         real(bsa_real_t), intent(in)   :: fi, fj
-         real(bsa_real_t), intent(in)   :: psdin(dimM_psd_), bispin(dimM_bisp_)
-         real(bsa_real_t), intent(out)  :: psdout(dimM_psd_), bispout(dimM_bisp_)
+         import :: dimM_psd_, dimM_bisp_
+         integer, intent(in) :: ii, ij
+         real, intent(in)   :: fi, fj
+         real, intent(in)   :: psdin(dimM_psd_), bispin(dimM_bisp_)
+         real, intent(out)  :: psdout(dimM_psd_), bispout(dimM_bisp_)
       end subroutine
    end interface
 
@@ -221,21 +220,21 @@ module BsaLib_Data
 !   MESHER control data
 ! **********************************************************************
 
-   real(bsa_real_t), pointer :: m3mf_msh_ptr_(:) => null(), m3mr_msh_ptr_(:) => null()
+   real, pointer :: m3mf_msh_ptr_(:) => null(), m3mr_msh_ptr_(:) => null()
 
    !> If true, stops at pre-mesh phase.
    logical :: is_only_premesh_ = .false.
 
    !> Premeshing scheme type
-   integer(bsa_int_t), public :: ipre_mesh_type = BSA_PREMESH_TYPE_DIAG_CREST_NO
+   integer, public :: ipre_mesh_type = BSA_PREMESH_TYPE_DIAG_CREST_NO
 
    !> Premeshing scheme mode
-   integer(bsa_int_t), public :: ipre_mesh_mode = BSA_PREMESH_MODE_ZONE_REFINED
+   integer, public :: ipre_mesh_mode = BSA_PREMESH_MODE_ZONE_REFINED
 
-   integer(bsa_int_t), public :: msh_iZone
+   integer, public :: msh_iZone
 
    !> Tracks zone with max N. of points
-   integer(bsa_int_t), public :: msh_max_zone_NPts = 0
+   integer, public :: msh_max_zone_NPts = 0
 
    !> Controls if checking zone's deltas or not.
    logical :: do_validate_deltas_ = .true.
@@ -244,19 +243,19 @@ module BsaLib_Data
    logical :: do_restrict_bkgpeak_ = .false.
 
    !> Stores width of background peak
-   real(bsa_real_t) :: bkg_peakw_ = 0._bsa_real_t
+   real :: bkg_peakw_ = 0.
 
    !> Array of resonant peak extensions (widths)
-   real(bsa_real_t), allocatable :: peak_exts_(:)
+   real, allocatable :: peak_exts_(:)
 
    ! Total pre-mesh/post-mesh phase points
-   integer(bsa_int_t), public :: msh_bfmpts_pre_
-   integer(bsa_int_t), public :: msh_bfmpts_post_
-   integer(bsa_int_t), public :: msh_brmpts_post_
+   integer, public :: msh_bfmpts_pre_
+   integer, public :: msh_bfmpts_post_
+   integer, public :: msh_brmpts_post_
 
    !> Code "-1" means that interest modes have to be read from the NEXT (right)
    !> limit only, since this is the first limit in the list
-   integer(bsa_int_t), public, parameter :: CODE_PRE_PEAK_OK = -1_bsa_int_t
+   integer, public, parameter :: CODE_PRE_PEAK_OK = -1
 
    !> Code "-2" means that interest modes have to be read from 
    !> NEXT (right) limit only, since this is the first limit in the list.
@@ -265,19 +264,19 @@ module BsaLib_Data
    !> one is close to this zone's limit, in order to determine if
    !> to be added to its interest modes.
    !> Hence, it is a sort of "ALARM". Info will not be accurate in this case.
-   integer(bsa_int_t), public, parameter :: CODE_PRE_PEAK_KO = -2_bsa_int_t
+   integer, public, parameter :: CODE_PRE_PEAK_KO = -2
 
    !> Limit zones interest modes indexes
-   integer(bsa_int_t), public, allocatable :: msh_ZoneLimsInterestModes(:)
+   integer, public, allocatable :: msh_ZoneLimsInterestModes(:)
 
    !> Tot n. of zones counter.
-   integer(bsa_int_t), public, target :: msh_NZones = 0
+   integer, public, target :: msh_NZones = 0
 
    !> Flag to signal whether POD CACHING has been used
 #ifdef BSA_USE_POD_DATA_CACHING
-   integer(bsa_int_t), parameter :: POD_CACHING_FLAG = 1_bsa_int_t
+   integer, parameter :: POD_CACHING_FLAG = 1
 #else
-   integer(bsa_int_t), parameter :: POD_CACHING_FLAG = 0_bsa_int_t
+   integer, parameter :: POD_CACHING_FLAG = 0
 #endif
 
    !> Controls whether employing new BFM MLR method or not
@@ -287,13 +286,13 @@ module BsaLib_Data
    logical          :: do_trunc_POD_  = .false.
 
    !> POD truncation limit
-   real(bsa_real_t) :: POD_trunc_lim_ = 0._bsa_real_t
+   real :: POD_trunc_lim_ = 0.
 
    !> If true, keeps specified n. of POD modes
    logical          :: nPODmodes_set_ = .false.
 
    !> N. of POD modes to be kept
-   integer(bsa_int_t) :: nmodes_POD_  = 0_int32
+   integer :: nmodes_POD_  = 0_int32
 
    !> If .true., exports POD truncation info to a file.
    logical :: do_export_POD_info_ = .false.
@@ -306,16 +305,14 @@ module BsaLib_Data
    procedure(getMshBRM), pointer :: getBRM_msh => null()
    abstract interface
       subroutine getMshBFM(bfm, fi, fj)
-         import :: bsa_real_t
-         real(bsa_real_t), intent(inout), contiguous :: bfm(:, :)
-         real(bsa_real_t), intent(in), contiguous    :: fi(:), fj(:)
+         real, intent(inout), contiguous :: bfm(:, :)
+         real, intent(in), contiguous    :: fi(:), fj(:)
       end subroutine
 
       subroutine getMshBRM(brm, fi, fj, bfm)
-         import :: bsa_real_t
-         real(bsa_real_t), intent(inout), contiguous :: brm(:, :)
-         real(bsa_real_t), intent(in), contiguous :: fi(:), fj(:)
-         real(bsa_real_t), intent(in), contiguous :: bfm(:, :)
+         real, intent(inout), contiguous :: brm(:, :)
+         real, intent(in), contiguous :: fi(:), fj(:)
+         real, intent(in), contiguous :: bfm(:, :)
       end subroutine
    end interface
 

@@ -95,24 +95,24 @@ __mod_sub_compute subroutine __sub_name_compute(this)
 ! === Common declarations
       integer   :: i, j
       integer   :: i_bfm, zNp
-      real(bsa_real_t) :: ctr_infl, brd_infl, vtx_infl
-      real(bsa_real_t) :: dfIi, dfIj, dfJi, dfJj
-      real(bsa_real_t), dimension(1), target :: base_fi, base_fj, fi, fj
-      real(bsa_real_t), allocatable          :: bfm(:, :)
+      real :: ctr_infl, brd_infl, vtx_infl
+      real :: dfIi, dfIj, dfJi, dfJj
+      real, dimension(1), target :: base_fi, base_fj, fi, fj
+      real, allocatable          :: bfm(:, :)
 
 # ifdef _BSA_M3MF_ONLY_PREMESH
 #   ifdef __triang_zone__
-      real(bsa_real_t) :: dw, vtx_infl_t
+      real :: dw, vtx_infl_t
 #   else
-      real(bsa_real_t) :: dwI, dwJ
+      real :: dwI, dwJ
 #   endif
 
-      real(bsa_real_t), allocatable :: intg(:)
+      real, allocatable :: intg(:)
 
 ! #   define __local_debug_write__
 #   ifdef __local_debug_write__
       integer, save  :: iun = 430000
-      real(bsa_real_t), allocatable :: fi_v_save_(:), fj_v_save_(:)
+      real, allocatable :: fi_v_save_(:), fj_v_save_(:)
 #   endif
 # endif  ! _BSA_M3MF_ONLY_PREMESH
 ! === Common declarations
@@ -121,7 +121,7 @@ __mod_sub_compute subroutine __sub_name_compute(this)
 
 # ifdef __triang_zone__
       integer :: Np_m1, Nj_m1
-      real(bsa_real_t)       :: df_CA, df_CST
+      real       :: df_CA, df_CST
 #  ifdef __zone_layout_validation__
       type(MPoint_t) :: pt
 #  endif
@@ -165,15 +165,15 @@ __mod_sub_compute subroutine __sub_name_compute(this)
 #   ifdef __triang_zone__
       dw = df_CST * CST_PIt2
       ctr_infl = dw * dw
-      brd_infl = ctr_infl / 2._bsa_real_t
-      vtx_infl = brd_infl / 2._bsa_real_t
-      vtx_infl_t = vtx_infl / 2._bsa_real_t
+      brd_infl = ctr_infl / 2.
+      vtx_infl = brd_infl / 2.
+      vtx_infl_t = vtx_infl / 2.
 #   else
       dwI = this%deltaf_I_ * CST_PIt2  ! deltas in [rad/s] (to compute influence areas)
       dwJ = this%deltaf_J_ * CST_PIt2
       ctr_infl = dwI * dwJ
-      brd_infl = ctr_infl / 2._bsa_real_t
-      vtx_infl = brd_infl / 2._bsa_real_t
+      brd_infl = ctr_infl / 2.
+      vtx_infl = brd_infl / 2.
 #   endif
 
       allocate(intg(dimM_bisp_))
@@ -205,7 +205,7 @@ __mod_sub_compute subroutine __sub_name_compute(this)
       base_fj(1) = this%Ipt_%freqJ()
 # endif
       block
-         real(bsa_real_t) :: rtmp
+         real :: rtmp
 
          if     (this%rot_ < CST_PId2)   then  ! < 90
          elseif (this%rot_ < CST_PIGREC) then  ! < 180
@@ -222,6 +222,7 @@ __mod_sub_compute subroutine __sub_name_compute(this)
 
       fi(1) = base_fi(1)
       fj(1) = base_fj(1)
+
       call getBFM_msh(bfm(:, 1:1), fi, fj)
 # ifdef _BSA_M3MF_ONLY_PREMESH
       intg = bfm(:, 1) * vtx_infl
@@ -393,7 +394,7 @@ __mod_sub_compute subroutine __sub_name_compute(this)
 #  ifdef __local_debug_write__
       iun = iun + 1
       write(iun, '(  (g) )') 0
-      write(iun, '(  (g) )') this%rot_ / CST_PIGREC * 180._bsa_real_t
+      write(iun, '(  (g) )') this%rot_ / CST_PIGREC * 180.
       write(iun, '( *(g, 2x) )') dfIi, dfIj
       write(iun, '( *(g, 2x) )') fi_v_save_
       write(iun, '( *(g, 2x) )') dfJi, dfJj
@@ -482,7 +483,7 @@ end subroutine __sub_name_compute
       !
       class(__this_type), intent(inout) :: this
 #ifndef BSA_USE_POD_DATA_CACHING
-      real(bsa_real_t), intent(in)          :: bfm_undump(:, :)
+      real, intent(in)          :: bfm_undump(:, :)
 #endif
       class(*), pointer, intent(in) :: pdata
 
@@ -501,15 +502,15 @@ end subroutine __sub_name_compute
       integer  :: n_pts_bfm_ref_i_, n_pts_bfm_ref_j_
       integer  :: pIcurr, pIprev, pJhead, pJtail     ! HTPC indexes
 
-      real(bsa_real_t)        :: dfIi_bfm_lv0_, dfIj_bfm_lv0_, dfJi_bfm_lv0_, dfJj_bfm_lv0_
-      real(bsa_real_t)        :: dfIi_bfm_ref_, dfIj_bfm_ref_, dfJi_bfm_ref_, dfJj_bfm_ref_
-      real(bsa_real_t)        :: dfI_bfm_lv0_, dfJ_bfm_lv0_, dfI_bfm_ref_, dfJ_bfm_ref_
-      real(bsa_real_t)        :: dfIi_brm_interp, dfIj_brm_interp, dfJi_brm_interp, dfJj_brm_interp
-      real(bsa_real_t)        :: dfI_brm_interp_, dfJ_brm_interp_
-      real(bsa_real_t)        :: vtx_infl, brd_infl, ctr_infl
+      real        :: dfIi_bfm_lv0_, dfIj_bfm_lv0_, dfJi_bfm_lv0_, dfJj_bfm_lv0_
+      real        :: dfIi_bfm_ref_, dfIj_bfm_ref_, dfJi_bfm_ref_, dfJj_bfm_ref_
+      real        :: dfI_bfm_lv0_, dfJ_bfm_lv0_, dfI_bfm_ref_, dfJ_bfm_ref_
+      real        :: dfIi_brm_interp, dfIj_brm_interp, dfJi_brm_interp, dfJj_brm_interp
+      real        :: dfI_brm_interp_, dfJ_brm_interp_
+      real        :: vtx_infl, brd_infl, ctr_infl
 #ifdef __triang_zone__
-      real(bsa_real_t)        :: df_cst, df_diag_old, df_diag_bfm_ref
-      real(bsa_real_t)        :: df_diag_brm_interp, dw_cst, dfJ_oldtmp
+      real        :: df_cst, df_diag_old, df_diag_bfm_ref
+      real        :: df_diag_brm_interp, dw_cst, dfJ_oldtmp
 #  define __vtx_infl_r  vtx_infl
 #  define __brd_infl_r  brd_infl
 #  define __ctr_infl_r  ctr_infl
@@ -517,7 +518,7 @@ end subroutine __sub_name_compute
 #  define __vtx_infl_t  (vtx_infl / 2)
 
 #else
-      real(bsa_real_t)        :: dwI, dwJ
+      real        :: dwI, dwJ
       integer  :: i_fct, j_fct
 
       integer, allocatable :: inter_modes_(:) ! interest modes
@@ -535,13 +536,13 @@ end subroutine __sub_name_compute
       integer :: i_bfm_interpJ
 
       ! freqs
-      real(bsa_real_t) :: fi_baseptI, fj_baseptI
-      real(bsa_real_t), target  :: fi(1), fj(1), fi_baseptJ(1), fj_baseptJ(1)
-      real(bsa_real_t), pointer :: fi_ptr(:) => null(), fj_ptr(:) => null()
+      real :: fi_baseptI, fj_baseptI
+      real, target  :: fi(1), fj(1), fi_baseptJ(1), fj_baseptJ(1)
+      real, pointer :: fi_ptr(:) => null(), fj_ptr(:) => null()
 #ifdef __new_interp_proc__
-      real(bsa_real_t), allocatable :: fi_v_(:), fj_v_(:)
+      real, allocatable :: fi_v_(:), fj_v_(:)
 # ifdef BSA_USE_POD_DATA_CACHING
-      real(bsa_real_t), allocatable :: bfm_undump(:, :)
+      real, allocatable :: bfm_undump(:, :)
       integer :: i_bfm
 #   ifdef __triang_zone__
       integer :: i_bfm_offs
@@ -549,15 +550,15 @@ end subroutine __sub_name_compute
 # endif
 #endif ! __new_interp_proc__
 
-      real(bsa_real_t), allocatable :: bfm_new_left(:, :), bfm_new_right(:, :)
-      real(bsa_real_t), allocatable :: bfm_interp(:, :)
+      real, allocatable :: bfm_new_left(:, :), bfm_new_right(:, :)
+      real, allocatable :: bfm_interp(:, :)
 
-      real(bsa_real_t) :: dfJtail, dfJhead, dfIcurr, dfIprev
-      real(bsa_real_t) :: bfmtail(dimM_bisp_, 1), bfmhead(dimM_bisp_, 1)
+      real :: dfJtail, dfJhead, dfIcurr, dfIprev
+      real :: bfmtail(dimM_bisp_, 1), bfmhead(dimM_bisp_, 1)
 
 #ifdef __update_m3mf__
-      real(bsa_real_t) :: intg_bfm(dimM_bisp_)
-      real(bsa_real_t) :: vtx_infl_bfm, brd_infl_bfm, ctr_infl_bfm
+      real :: intg_bfm(dimM_bisp_)
+      real :: vtx_infl_bfm, brd_infl_bfm, ctr_infl_bfm
 
 # ifdef __triang_zone__
 #   define __vtx_infl_r_bfm  vtx_infl_bfm
@@ -582,11 +583,11 @@ end subroutine __sub_name_compute
 #ifdef __local_debug_write__
       integer       :: ifi, ifj
       integer, save :: iun = 430000
-      real(bsa_real_t), allocatable :: fi_v_save_(:), fj_v_save_(:)
+      real, allocatable :: fi_v_save_(:), fj_v_save_(:)
 #endif
 
-      real(bsa_real_t), allocatable :: brm(:, :)
-      real(bsa_real_t)              :: intg(dimM_bisp_)
+      real, allocatable :: brm(:, :)
+      real              :: intg(dimM_bisp_)
 
 
 
@@ -658,15 +659,15 @@ end subroutine __sub_name_compute
       ! influence areas for BRM integration
       dw_cst       = dfI_bfm_ref_ * CST_PIt2
       ctr_infl_bfm = dw_cst * dw_cst
-      brd_infl_bfm = ctr_infl_bfm / 2._bsa_real_t
-      vtx_infl_bfm = brd_infl_bfm / 2._bsa_real_t
+      brd_infl_bfm = ctr_infl_bfm / 2.
+      vtx_infl_bfm = brd_infl_bfm / 2.
 # endif
 
       ! influence areas for BRM integration
       dw_cst   = dfI_brm_interp_ * CST_PIt2
       ctr_infl = dw_cst * dw_cst
-      brd_infl = ctr_infl / 2._bsa_real_t
-      vtx_infl = brd_infl / 2._bsa_real_t
+      brd_infl = ctr_infl / 2.
+      vtx_infl = brd_infl / 2.
 
       ! get actualised BFM-refined and BRM-interp  refinements (along borders)
       ni_bfm_ref_ = (this%ni_ - 1)
@@ -810,16 +811,16 @@ end subroutine __sub_name_compute
       dwI = dfI_bfm_ref_ * CST_PIt2
       dwJ = dfJ_bfm_ref_ * CST_PIt2
       ctr_infl_bfm = dwI * dwJ
-      brd_infl_bfm = ctr_infl_bfm / 2._bsa_real_t
-      vtx_infl_bfm = brd_infl_bfm / 2._bsa_real_t
+      brd_infl_bfm = ctr_infl_bfm / 2.
+      vtx_infl_bfm = brd_infl_bfm / 2.
 # endif
 
       ! compute BRM influence areas for integration
       dwI = dfI_brm_interp_ * CST_PIt2
       dwJ = dfJ_brm_interp_ * CST_PIt2
       ctr_infl = dwI * dwJ
-      brd_infl = ctr_infl / 2._bsa_real_t
-      vtx_infl = brd_infl / 2._bsa_real_t
+      brd_infl = ctr_infl / 2.
+      vtx_infl = brd_infl / 2.
 
       ! get actualised BFM-refined and BRM-interp  refinements (along borders)
       ni_bfm_ref_ = (this%ni_ - 1)
@@ -841,11 +842,11 @@ end subroutine __sub_name_compute
 
       allocate(brm(dimM_bisp_, nPtsPost), stat=ist)
       if (ist /= 0) call bsa_Abort("Error allocating ""brm"" in interpolating RZ.")
-      brm = 0._bsa_real_t
+      brm = 0.
 
       allocate(bfm_new_left(dimM_bisp_, nj), stat=ist)
       if (ist /= 0) call bsa_Abort("Error allocating ""bfm_new_left"" in interpolating RZ.")
-      bfm_new_left  = 0._bsa_real_t
+      bfm_new_left  = 0.
 
 #ifdef __triang_zone__
       allocate(bfm_new_right(dimM_bisp_, nj - nipJ - 1), stat=ist)
@@ -853,11 +854,11 @@ end subroutine __sub_name_compute
       allocate(bfm_new_right(dimM_bisp_, nj), stat=ist)
 #endif
       if (ist /= 0) call bsa_Abort("Error allocating ""bfm_new_right"" in interpolating RZ.")
-      bfm_new_right = 0._bsa_real_t
+      bfm_new_right = 0.
 
       allocate(bfm_interp(dimM_bisp_, nj), stat=ist)
       if (ist /= 0) call bsa_Abort("Error allocating ""bfm_interp"" in interpolating RZ.")
-      bfm_interp = 0._bsa_real_t
+      bfm_interp = 0.
 
 
 #ifdef __triang_zone__
@@ -868,7 +869,7 @@ end subroutine __sub_name_compute
       fj_baseptI = this%Ipt_%freqJ()
 #endif
       block
-         real(bsa_real_t) :: rtmp
+         real :: rtmp
 
          if     (this%rot_ < CST_PId2)   then  ! < 90
             fi_ptr => fi
@@ -909,11 +910,11 @@ end subroutine __sub_name_compute
 
       allocate(fi_v_(ni_bfm_ref_), stat=ist)
       if (ist /= 0) call bsa_Abort("Error allocating ""fi"" in interpolating RZ.")
-      fi_v_ = 0._bsa_real_t
+      fi_v_ = 0.
 
       allocate(fj_v_(nj_bfm_ref_), stat=ist)
       if (ist /= 0) call bsa_Abort("Error allocating ""fj"" in interpolating RZ.")
-      fj_v_ = 0._bsa_real_t
+      fj_v_ = 0.
 
       ! TODO: maybe use two concurrent threads ?? 
       !       (we might already be in a threaded env)
@@ -961,11 +962,11 @@ end subroutine __sub_name_compute
 
       allocate(fi_v_(nPtsPost), stat=ist)
       if (ist /= 0) call bsa_Abort("Error allocating ""fi"" in interpolating RZ.")
-      fi_v_ = 0._bsa_real_t
+      fi_v_ = 0.
 
       allocate(fj_v_(nPtsPost), stat=ist)
       if (ist /= 0) call bsa_Abort("Error allocating ""fj"" in interpolating RZ.")
-      fj_v_ = 0._bsa_real_t
+      fj_v_ = 0.
 #endif  ! __new_interp_proc__
 
 
@@ -973,13 +974,13 @@ end subroutine __sub_name_compute
       if (.not. allocated(fi_v_save_)) then 
          allocate(fi_v_save_(ni_bfm_ref_), stat=ist)
          if (ist /= 0) call bsa_Abort("Error allocating ""fi"" in interpolating RZ.")
-         fi_v_save_ = 0._bsa_real_t
+         fi_v_save_ = 0.
       endif
 
       if (.not. allocated(fj_v_save_)) then
          allocate(fj_v_save_(nj_bfm_ref_), stat=ist)
          if (ist /= 0) call bsa_Abort("Error allocating ""fj"" in interpolating RZ.")
-         fj_v_save_ = 0._bsa_real_t
+         fj_v_save_ = 0.
       endif
 #endif
 
@@ -1059,7 +1060,7 @@ end subroutine __sub_name_compute
 #endif
 
             dfJhead = dfJ_bfm_ref_
-            dfJtail = 0._bsa_real_t
+            dfJtail = 0.
             do pJtail = 1, nipJ ! interp (J-dir) between tail-head
 
                fi(1) = fi(1) + dfJi_brm_interp
@@ -1140,7 +1141,7 @@ end subroutine __sub_name_compute
 
 
          dfJhead = dfJ_bfm_ref_
-         dfJtail = 0._bsa_real_t
+         dfJtail = 0.
          do pJtail = 1, nipJ ! interp (J-dir) between tail-head
 
             fi(1) = fi(1) + dfJi_brm_interp
@@ -1301,7 +1302,7 @@ end subroutine __sub_name_compute
 
                   ! once we moved head, restore init, distances from head/tail
                   dfJhead = dfJ_bfm_ref_
-                  dfJtail = 0._bsa_real_t
+                  dfJtail = 0.
                   do pJtail = 1, nipJ ! interp (J-dir) between tail-head
 
                      fi(1) = fi(1) + dfJi_brm_interp
@@ -1377,7 +1378,7 @@ end subroutine __sub_name_compute
 
                ! once we moved head, restore init, distances from head/tail
                dfJhead = dfJ_bfm_ref_
-               dfJtail = 0._bsa_real_t
+               dfJtail = 0.
                do pJtail = 1, nipJ
 
                   fi(1) = fi(1) + dfJi_brm_interp
@@ -1449,7 +1450,7 @@ end subroutine __sub_name_compute
 # endif
 
                dfJhead = dfJ_bfm_ref_
-               dfJtail = 0._bsa_real_t
+               dfJtail = 0.
                do pJtail = 1, nipJ
 
                   fi(1) = fi(1) + dfJi_brm_interp
@@ -1519,7 +1520,7 @@ end subroutine __sub_name_compute
             ! Now INTERPOLATE along I-dir between left and right BFM infl lines.
             !
             dfIcurr = dfI_bfm_ref_ ! reset I-dir CURR-PREV distances
-            dfIprev = 0._bsa_real_t
+            dfIprev = 0.
             do pIprev = 1, nipI ! interp (I-dir) between prev-curr
 
                ! bulk I-dir interpolation until pj_head section level.
@@ -1587,7 +1588,7 @@ end subroutine __sub_name_compute
                njtmp      = njtmp - 1
                dfJ_oldtmp = dfJ_oldtmp - dfJ_brm_interp_
                dfJhead    = dfJ_oldtmp
-               dfJtail    = 0._bsa_real_t
+               dfJtail    = 0.
                ipos       = njNew_picurr ! tail index position
                do pJtail = 1, njtmp
 
@@ -1745,7 +1746,7 @@ end subroutine __sub_name_compute
 
                ! once we moved head, restore init, distances from head/tail
                dfJhead = dfJ_bfm_ref_
-               dfJtail = 0._bsa_real_t
+               dfJtail = 0.
                do pJtail = 1, nipJ
 
                   fi(1) = fi(1) + dfJi_brm_interp
@@ -1816,7 +1817,7 @@ end subroutine __sub_name_compute
 
             ! once we moved head, restore init distances from head/tail
             dfJhead = dfJ_bfm_ref_
-            dfJtail = 0._bsa_real_t
+            dfJtail = 0.
             do pJtail = 1, nipJ
 
                fi(1) = fi(1) + dfJi_brm_interp
@@ -1898,7 +1899,7 @@ end subroutine __sub_name_compute
          ! prev has to start moving toward CURR.
 
          dfIcurr = dfI_bfm_ref_ ! reset I-dir CURR-PREV distances
-         dfIprev = 0._bsa_real_t
+         dfIprev = 0.
          do pIprev = 1, nipI ! interpolate along I
 
             ! bulk I-dir interpolation until pj_head section level.
@@ -1962,7 +1963,7 @@ end subroutine __sub_name_compute
             njtmp      = njtmp - 1
             dfJ_oldtmp = dfJ_oldtmp - dfJ_brm_interp_
             dfJhead    = dfJ_oldtmp
-            dfJtail    = 0._bsa_real_t
+            dfJtail    = 0.
             ipos       = njNew_picurr ! tail index position
             do pJtail = 1, njtmp
 
@@ -2115,7 +2116,7 @@ end subroutine __sub_name_compute
       ! write(iun, '(  (g) )') intg_bfm
       ! write(iun, '(   (a) )') ''
       ! write(iun, '(  (g) )') m3mf_msh_ptr_
-      write(iun, '(  (g) )') this%rot_ / CST_PIGREC * 180._bsa_real_t
+      write(iun, '(  (g) )') this%rot_ / CST_PIGREC * 180.
       write(iun, '( *(g, 2x) )') dfIi_bfm_ref_, dfIj_bfm_ref_
       write(iun, '( *(g, 2x) )') fi_v_save_
       write(iun, '( *(g, 2x) )') dfJi_bfm_ref_, dfJj_bfm_ref_

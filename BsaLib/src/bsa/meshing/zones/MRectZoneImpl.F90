@@ -36,7 +36,7 @@ contains
 
 
    module function MRectZone_t_custom_constructor(rot, name) result(this)
-      real(bsa_real_t), intent(in), optional :: rot
+      real, intent(in), optional :: rot
       character(len=*), intent(in), optional :: name
       ! NOTE: compiler uses default initialisation here (built-in)
       type(MRectZone_t) :: this
@@ -56,7 +56,7 @@ contains
    !> Gets rect base along I-dir
    elemental module function baseI_rct(this) result(res)
       class(MRectZone_t), intent(in) :: this
-      real(bsa_real_t) :: res
+      real :: res
 
       res = this%base_I_
    end function
@@ -65,7 +65,7 @@ contains
    !> Gets rect base along J-dir
    elemental module function baseJ_rct(this) result(res)
       class(MRectZone_t), intent(in) :: this
-      real(bsa_real_t) :: res
+      real :: res
 
       res = this%base_J_
    end function
@@ -93,7 +93,7 @@ contains
    pure module function getBPoint(this) result(pt)
       class(MRectZone_t), intent(in) :: this
       type(MPoint_t)   :: pt
-      real(bsa_real_t) :: ang
+      real :: ang
 
       ! in 4-th quadrant, decrement by 3/2*pi -> first quadrant
       if (this%rot_ > CST_PIt3d2) then
@@ -130,7 +130,7 @@ contains
 
    module subroutine setDeltas(this, dfi, dfj, adapt)
       class(MRectZone_t), intent(inout) :: this
-      real(bsa_real_t), intent(in)      :: dfi, dfj
+      real, intent(in)      :: dfi, dfj
       logical, intent(in), optional     :: adapt
       logical :: do_adapt = .false.
 
@@ -203,7 +203,7 @@ contains
       character(len=1) :: loc
 
       !> Delta values
-      real(bsa_real_t), intent(in) :: dfi, dfj
+      real, intent(in) :: dfi, dfj
 
       !> Refinements
       integer, value :: ni, nj
@@ -255,10 +255,10 @@ contains
       character(len=1), intent(in) :: loc
 
       !> Delta values
-      real(bsa_real_t), value :: dfi, dfj
+      real, value :: dfi, dfj
 
       !> Max deltas values
-      real(bsa_real_t) :: maxF_i, maxF_j
+      real :: maxF_i, maxF_j
 
       !> adjusts deltas to max values specified.
       logical, intent(in), optional :: force
@@ -278,7 +278,7 @@ contains
          character(len = *), parameter :: invalid_max_vals = &
             ERRMSG//'Invalid max values (out of allowed bounds).'
          logical :: do_force
-         real(bsa_real_t) :: fi, fj, bi, bj
+         real :: fi, fj, bi, bj
          integer   :: ni, nj
 
          do_force = .false.
@@ -287,10 +287,10 @@ contains
          endif
 
          ! initialise
-         bi = 0._bsa_real_t
-         bj = 0._bsa_real_t
-         fi = 0._bsa_real_t
-         fj = 0._bsa_real_t
+         bi = 0.
+         bj = 0.
+         fi = 0.
+         fj = 0.
          ni = 0
          nj = 0
 
@@ -299,7 +299,7 @@ contains
             fi = pt%freqI()
             fj = pt%freqJ()
 
-            if (this%rot_ == 0._bsa_real_t) then
+            if (this%rot_ == 0.) then
                if (maxF_i <= fi .or. maxF_j <= fj) call bsa_Abort(invalid_max_vals)
 
                bi = maxF_i - fi
@@ -329,7 +329,7 @@ contains
             ! invert deltas if needed
             if (.not. (this%rot_ == 0 .or. this%rot_ == CST_PIGREC)) then
                block
-                  real(bsa_real_t) :: tmp
+                  real :: tmp
 
                   tmp = dfi
                   dfi = dfj
@@ -355,7 +355,7 @@ contains
 
 
             block
-               real(bsa_real_t) :: di, dj
+               real :: di, dj
                logical :: do_exceed = .false.
 
 
@@ -369,7 +369,7 @@ contains
                nj = 1
 
 
-               if (this%rot_ == 0._bsa_real_t) then
+               if (this%rot_ == 0.) then
 
                   fi = pt%freqI() + di
                   fj = pt%freqJ() + dj
@@ -445,7 +445,7 @@ contains
                if (ni == 1 .or. nj == 1) call bsa_Abort('At least one max value is too small.')
 
 
-               if (this%rot_ == 0._bsa_real_t) then
+               if (this%rot_ == 0.) then
                   bi = (ni - 1) * di
                   bj = (nj - 1) * dj
 
@@ -537,13 +537,13 @@ contains
 
       class(MRectZone_t), intent(inout) :: this
       class(MPoint_t), intent(in)       :: Pi
-      real(bsa_real_t), intent(in)      :: coord_val
+      real, intent(in)      :: coord_val
       character(len = 1), intent(in)    :: coord_ty_ch
-      real(bsa_real_t), intent(in)      :: baseval
+      real, intent(in)      :: baseval
       character(len = 1), intent(in)    :: base_dir
       logical, intent(in)               :: called
 
-      real(bsa_real_t) :: ang
+      real :: ang
       type(MPoint_t)   :: pt
 
       if (.not. (coord_ty_ch == 'i' .or. coord_ty_ch == 'j')) &
@@ -597,11 +597,11 @@ contains
 
       class(MRectZone_t), intent(inout) :: this
       class(MPoint_t), intent(in)       :: Pi
-      real(bsa_real_t), intent(in)      :: coord_val
+      real, intent(in)      :: coord_val
       character(len = 1), intent(in)    :: coord_ty_ch
-      real(bsa_real_t), intent(in)      :: baseval
+      real, intent(in)      :: baseval
       character(len = 1), intent(in)    :: base_dir
-      real(bsa_real_t), intent(in)      :: dfi, dfj
+      real, intent(in)      :: dfi, dfj
 
 
       call this%defineFromEndPtCoordAndBase_norm(&
@@ -624,7 +624,7 @@ contains
       class(MRectZone_t), intent(inout) :: this
       class(MPoint_t), intent(in)       :: pt
       character(len=1), optional, intent(in) :: loc
-      real(bsa_real_t), intent(in), optional :: base_i, base_j
+      real, intent(in), optional :: base_i, base_j
 
       character(len=1) :: location = 'i'
 
@@ -633,7 +633,7 @@ contains
       if (location == 'c') then
 
          block
-            real(bsa_real_t) :: bid2, bjd2
+            real :: bid2, bjd2
 
             if (present(base_i)) then
                this%base_I_ = base_i
@@ -673,7 +673,7 @@ contains
       class(MPoint_t), intent(in)       :: pt
       character(len=1), intent(in)      :: loc
 
-      real(bsa_real_t) :: c, s, ang, di, dj
+      real :: c, s, ang, di, dj
 
       if (.not. (loc == 'i' .or. loc == 'e')) &
          call bsa_Abort('Invalid point location.')
@@ -739,9 +739,9 @@ contains
    ! !> Avoid setting a delta smaller than given limit
    ! elemental module impure subroutine validateDeltas(this, lval)
    !    class(MRectZone_t), intent(inout) :: this
-   !    real(bsa_real_t), intent(in) :: lval
+   !    real, intent(in) :: lval
 
-   !    real(bsa_real_t) :: dfi, dfj
+   !    real :: dfi, dfj
    !    logical :: coarsen = .false.
 
    !    dfi = this%deltaf_I_
@@ -767,8 +767,8 @@ contains
 
    ! !> Returns euqivalent rotation in the FIRST quadrant.
    ! elemental function getFirstQuadEquivRot(rot) result(rot1)
-   !    real(bsa_real_t), intent(in) :: rot
-   !    real(bsa_real_t) :: rot1
+   !    real, intent(in) :: rot
+   !    real :: rot1
 
    !    if (rot < CST_PId2) then ! FIRST quad, keep it
    !       rot1 = rot
@@ -792,14 +792,14 @@ contains
       class(MRectZone_t), intent(inout) :: this
       class(MPoint_t), intent(in)  :: pt
       character(len=1), intent(in) :: base_dir, known_coord
-      real(bsa_real_t), intent(in) :: coord_val
+      real, intent(in) :: coord_val
 
-      real(bsa_real_t) :: kd, rot, cd, fi, fj
+      real :: kd, rot, cd, fi, fj
       type(MPoint_t) :: Pe
 
 
       ! NOTE: preinitialise to avoid errors !!!!!!!!!!!!
-      cd = 0._bsa_real_t
+      cd = 0.
 
 
       if (base_dir == 'i') then ! we passed B point, we know side along I-dir
@@ -962,9 +962,9 @@ contains
    ! !> zone rotation w.r.t. GRS.
    ! module subroutine getIJfsteps(this, dfIi, dfIj, dfJi, dfJj)
    !    class(MRectZone_t), intent(in) :: this
-   !    real(bsa_real_t), intent(out)  :: dfIi, dfIj, dfJi, dfJj
+   !    real, intent(out)  :: dfIi, dfIj, dfJi, dfJj
 
-   !    real(bsa_real_t) :: c, s, ang
+   !    real :: c, s, ang
 
    !    if (this%rot_ < CST_PId2) then ! FIRST quadrant
 
@@ -1025,10 +1025,10 @@ contains
    ! module function reconstructZoneBaseMesh(this) result(msh)
    !    class(MRectZone_t), intent(in) :: this
    !    !> BUG: might be 2-rank array instead of 3!
-   !    real(bsa_real_t) :: msh(2, this%nj_, this%ni_)
+   !    real :: msh(2, this%nj_, this%ni_)
 
-   !    real(bsa_real_t) :: dfIi, dfIj, dfJi, dfJj
-   !    real(bsa_real_t) :: base_fi, base_fj, fi, fj
+   !    real :: dfIi, dfIj, dfJi, dfJj
+   !    real :: base_fi, base_fj, fi, fj
    !    integer   :: i, j
 
    !    call this%getIJfsteps(dfIi, dfIj, dfJi, dfJj)
@@ -1079,7 +1079,7 @@ contains
       class(MRectZone_t), intent(in) :: this
       integer, intent(in)     :: iquad
       type(MPoint_t)   :: pt
-      real(bsa_real_t) :: c, s, rot, di, dj
+      real :: c, s, rot, di, dj
 
       if (iquad < 1 .or. iquad > 4) return
 
@@ -1230,8 +1230,8 @@ contains
       !!       from the STATIC procedure UndumpZone() in MZone Module.
       class(MRectZone_t), intent(inout) :: this
 
-      real(bsa_real_t)   :: rval1, rval2
-      integer(bsa_int_t) :: ival1, ival2
+      real   :: rval1, rval2
+      integer :: ival1, ival2
 
       ! init point
       read(io_units_bfmdump(1)) rval1, rval2
@@ -1269,7 +1269,7 @@ contains
       !! Implementation of rect zone interpolation wrapper routine
       class(MRectZone_t), intent(inout) :: this
 #ifndef BSA_USE_POD_DATA_CACHING
-      real(bsa_real_t), intent(in)  :: bfm(:, :)
+      real, intent(in)  :: bfm(:, :)
 #endif
       class(*), pointer, intent(in) :: pdata
 

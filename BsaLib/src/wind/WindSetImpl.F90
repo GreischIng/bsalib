@@ -24,7 +24,7 @@ contains
 
    module subroutine SetWindvertProf(this, iwprof)
       class(WindData_t), intent(inout) :: this
-      integer(bsa_int_t), value :: iwprof
+      integer, value :: iwprof
 
       if (iwprof == 5) iwprof = 1
       if (iwprof < 1 .or. iwprof > 3) call bsa_Abort('Invalid "iwprof" value.')
@@ -43,7 +43,7 @@ contains
 
    module subroutine SetMainvertDir(this, ivert)
       class(WindData_t), intent(inout) :: this
-      integer(bsa_int_t), value :: ivert
+      integer, value :: ivert
 
       if (ivert < 1 .or. ivert > 3) call bsa_Abort('Invalid "ivert" value.')
       this%i_vert_ = ivert
@@ -61,11 +61,11 @@ contains
    module subroutine SetWindZoneLimits(this, lim, ilim)
       class(WindData_t), intent(inout) :: this
 #if  ((defined(__INTEL_COMPILER_BUILD_DATE)) && (__INTEL_COMPILER_BUILD_DATE >= 20221019))
-      real(bsa_real_t), intent(in), target     :: lim(..)
-      integer(bsa_int_t), intent(in), optional :: ilim(..)
+      real, intent(in), target     :: lim(..)
+      integer, intent(in), optional :: ilim(..)
 #else
-      real(bsa_real_t), intent(in), target     :: lim(:)
-      integer(bsa_int_t), intent(in), optional :: ilim(:)   ! limits' index passed
+      real, intent(in), target     :: lim(:)
+      integer, intent(in), optional :: ilim(:)   ! limits' index passed
 #endif
 
 #if  ((defined(__INTEL_COMPILER_BUILD_DATE)) && (__INTEL_COMPILER_BUILD_DATE >= 20221019))
@@ -125,9 +125,9 @@ contains
 
 
    module subroutine SetAirDensity(aird)
-      real(bsa_real_t), value :: aird
+      real, value :: aird
 
-      if (aird < 0._bsa_real_t) call bsa_Abort('Air density has a negative value.')
+      if (aird < 0.) call bsa_Abort('Air density has a negative value.')
       air_dens_ = aird
    end subroutine SetAirDensity
 
@@ -135,7 +135,7 @@ contains
 
 
    module subroutine SetGlobalW2G(mat)
-      real(bsa_real_t), intent(in) :: mat(3, 3)
+      real, intent(in) :: mat(3, 3)
       integer       :: istat
       character(len = 256) :: emsg
 
@@ -151,7 +151,7 @@ contains
 
    module subroutine SetWZMeanWindVel(this, UBref)
       class(WindData_t), intent(inout) :: this
-      real(bsa_real_t), target, intent(in) :: UBref(this%nz_)
+      real, target, intent(in) :: UBref(this%nz_)
 
       this%u_mean_ref_wz_ => UBref
    end subroutine SetWZMeanWindVel
@@ -161,7 +161,7 @@ contains
 
    module subroutine SetWZRefAlt(this, Zref)
       class(WindData_t), intent(inout)     :: this
-      real(bsa_real_t), target, intent(in) :: Zref(this%nz_)
+      real, target, intent(in) :: Zref(this%nz_)
 
       this%Zref_wz_ => Zref
    end subroutine SetWZRefAlt
@@ -171,7 +171,7 @@ contains
 
    module subroutine SetTurbWindScales(this, L)
       class(WindData_t), intent(inout) :: this
-      real(bsa_real_t), target, intent(in) :: L(3, 3, this%nz_)
+      real, target, intent(in) :: L(3, 3, this%nz_)
 
       this%turb_scales_wz_ => L
    end subroutine SetTurbWindScales
@@ -181,7 +181,7 @@ contains
 
    module subroutine SetTurbWindSDT(this, wtstd)
       class(WindData_t), intent(inout) :: this
-      real(bsa_real_t), target, intent(in) :: wtstd(3, this%nz_)
+      real, target, intent(in) :: wtstd(3, this%nz_)
 
       this%sigmaUVW_wz_ => wtstd
    end subroutine SetTurbWindSDT
@@ -191,7 +191,7 @@ contains
 
    module subroutine SetWindCorrCoeffs(this, corrcoeff)
       class(WindData_t), intent(inout) :: this
-      real(bsa_real_t), target, intent(in) :: corrcoeff(3, 3, this%nz_)
+      real, target, intent(in) :: corrcoeff(3, 3, this%nz_)
 
       this%corrCoeffs_wz_ => corrcoeff
    end subroutine SetWindCorrCoeffs
@@ -201,7 +201,7 @@ contains
 
    module subroutine SetWindCorrExpnts(this, correxpn)
       class(WindData_t), intent(inout) :: this
-      real(bsa_real_t), target, intent(in) :: correxpn(3, 3, this%nz_)
+      real, target, intent(in) :: correxpn(3, 3, this%nz_)
 
       this%corrExp_wz_ => correxpn
    end subroutine SetWindCorrExpnts
@@ -212,7 +212,7 @@ contains
 
    module subroutine SetIncidenceAngles(this, incang)
       class(WindData_t), intent(inout) :: this
-      real(bsa_real_t), target, intent(in) :: incang(this%nz_)
+      real, target, intent(in) :: incang(this%nz_)
 
       this%incAng_wz_ => incang
    end subroutine SetIncidenceAngles
@@ -223,7 +223,7 @@ contains
 
    module subroutine SetLocalRotMatW2G(this, rotW2G_L)
       class(WindData_t), intent(inout) :: this
-      real(bsa_real_t), target, intent(in) :: rotW2G_L(3, 3, this%nz_)
+      real, target, intent(in) :: rotW2G_L(3, 3, this%nz_)
 
       this%rot_LW2G_wz_ => rotW2G_L
    end subroutine SetLocalRotMatW2G
@@ -233,8 +233,8 @@ contains
 
    module subroutine setWindDirections(this, dirs, ndirs)
       class(WindData_t) :: this
-      integer(bsa_int_t), intent(in) :: dirs(:)
-      integer(bsa_int_t), value, optional :: ndirs
+      integer, intent(in) :: dirs(:)
+      integer, value, optional :: ndirs
       integer :: itmp
 
       itmp = size(dirs)
@@ -255,8 +255,8 @@ contains
 
    module subroutine setTurbComps(this, tc, ntc)
       class(WindData_t) :: this
-      integer(bsa_int_t), intent(in) :: tc(:)
-      integer(bsa_int_t), value, optional :: ntc
+      integer, intent(in) :: tc(:)
+      integer, value, optional :: ntc
       integer :: itmp
 
       itmp = size(tc)
@@ -321,7 +321,7 @@ contains
 
    module subroutine SetNodalVel(this, Unod)
       class(WindData_t), intent(inout) :: this
-      real(bsa_real_t), target, intent(in) :: Unod(:)
+      real, target, intent(in) :: Unod(:)
 
       this%u_node_ => Unod
    end subroutine SetNodalVel
@@ -331,7 +331,7 @@ contains
 
    module subroutine SetNodalWindZones(this, NodWZ)
       class(WindData_t), intent(inout) :: this
-      integer(bsa_int_t), target, intent(in) :: NodWZ(:)
+      integer, target, intent(in) :: NodWZ(:)
 
       this%wz_node_ => NodWZ
    end subroutine SetNodalWindZones
@@ -342,7 +342,7 @@ contains
 
    module subroutine SetNodalWindAltitudes(this, WnodAlt)
       class(WindData_t), intent(inout) :: this
-      real(bsa_real_t), target, intent(in) :: WnodAlt(:)
+      real, target, intent(in) :: WnodAlt(:)
 
       this%wAlt_node_ => WnodAlt
    end subroutine SetNodalWindAltitudes
@@ -354,7 +354,7 @@ contains
 
    module subroutine SetSpatialNodalCorr(this, nodCorr)
       class(WindData_t), intent(inout) :: this
-      real(bsa_real_t), target, intent(in) :: nodCorr(:, :)
+      real, target, intent(in) :: nodCorr(:, :)
 
       this%nod_corr_ => nodCorr
    end subroutine SetSpatialNodalCorr
@@ -364,8 +364,8 @@ contains
    module subroutine getFull2DNodCorrMat(this, nn, nodcorr2d)
       use BsaLib_Utility, only: util_getCorrVectIndex
       class(WindData_t), intent(in)  :: this
-      integer(bsa_int_t), value      :: nn
-      real(bsa_real_t), allocatable, intent(inout) :: nodcorr2d(:, :)
+      integer, value      :: nn
+      real, allocatable, intent(inout) :: nodcorr2d(:, :)
       integer :: i_ = 0, j_, id_
 
       if (.not. associated(this%nod_corr_)) return
@@ -385,7 +385,7 @@ contains
 
    module subroutine SetWindFCoeffs(this, wfc)
       class(WindData_t), intent(inout) :: this
-      real(bsa_real_t), target, intent(in) :: wfc(:, :, :)
+      real, target, intent(in) :: wfc(:, :, :)
 
       this%wfc_ => wfc
    end subroutine SetWindFCoeffs
@@ -396,7 +396,7 @@ contains
 
    module subroutine SetPhitimesC(this, phiTc)
       class(WindData_t), intent(inout) :: this
-      real(bsa_real_t), target, intent(in) :: phiTc(:, :, :)
+      real, target, intent(in) :: phiTc(:, :, :)
 
 
       this%phi_times_A_ndegw_ => phiTc

@@ -50,7 +50,7 @@ contains
    !> Gets rect base along I-dir
    elemental module function baseI_triang(this) result(res)
       class(MTriangZone_t), intent(in) :: this
-      real(bsa_real_t) :: res
+      real :: res
 
       res = getPointsDistance(this%Cpt_, this%Bpt_)
    end function
@@ -59,7 +59,7 @@ contains
    !> Gets rect base along J-dir
    elemental module function baseJ_triang(this) result(res)
       class(MTriangZone_t), intent(in) :: this
-      real(bsa_real_t) :: res
+      real :: res
 
       res = getPointsDistance(this%Cpt_, this%Apt_)
    end function
@@ -103,13 +103,13 @@ contains
    module subroutine setPABangle(this)
       class(MTriangZone_t), intent(inout) :: this
 
-      real(bsa_real_t) :: CA, AB, CB, cang
+      real :: CA, AB, CB, cang
 
       CA = getPointsDistance(this%Cpt_, this%Apt_)
       AB = getPointsDistance(this%Apt_, this%Bpt_)
       CB = getPointsDistance(this%Cpt_, this%Bpt_)
 
-      cang = (CA*CA + AB*AB - CB*CB) / (2._bsa_real_t * CA * AB)
+      cang = (CA*CA + AB*AB - CB*CB) / (2. * CA * AB)
       this%PABang_ = acos(cang)
    end subroutine
 
@@ -120,9 +120,9 @@ contains
    !> along I and J directions
    module subroutine adaptToDeltas(this, dfi, dfj)
       class(MTriangZone_t), intent(inout) :: this
-      real(bsa_real_t), value :: dfi, dfj
+      real, value :: dfi, dfj
 
-      real(bsa_real_t) :: CA, CB
+      real :: CA, CB
       integer   :: ni, nj
 
       CA = this%baseJ()
@@ -157,7 +157,7 @@ contains
    module subroutine deduceRotation(this)
       class(MTriangZone_t), intent(inout) :: this
 
-      real(bsa_real_t) :: dx, dy, ang
+      real :: dx, dy, ang
 
       ! BUG: not always 0 when supposed to.
       !      machine precision + finite floating point repr instabilities
@@ -168,11 +168,11 @@ contains
 
       ang = atan(abs(dx) / abs(dy))
 
-      if (.not. (dx >= 0._bsa_real_t .and. dy >= 0._bsa_real_t)) then ! NOT 1st quadrant
+      if (.not. (dx >= 0. .and. dy >= 0.)) then ! NOT 1st quadrant
 
-         if (dy < 0._bsa_real_t) then
+         if (dy < 0.) then
 
-            if (dx >= 0._bsa_real_t) then ! 2nd quadrant
+            if (dx >= 0.) then ! 2nd quadrant
 
                ang = CST_PIGREC - ang
             else ! 3rd quadrant
@@ -184,12 +184,12 @@ contains
 
             ! BUG: precision instability.
             !      Tru to mitigate it, vary bad!!
-            if (ang > 1e-14_bsa_real_t) then ! fixed tolerance acceptance
+            if (ang > 1e-14) then ! fixed tolerance acceptance
 
                ang = CST_PIt2 - ang
             else ! assume it 0
 
-               ang = 0._bsa_real_t
+               ang = 0.
             endif
          endif
       endif
@@ -208,11 +208,11 @@ contains
    !>   - df_cst : total delta along CB side (I-dir in LRS)
    module subroutine getRotatedUnaryDF(this, df_I_var, df_J_var, df_I_cst, df_J_cst)
       class(MTriangZone_t), intent(inout) :: this
-      real(bsa_real_t), intent(out)       :: df_I_var, df_J_var
-      real(bsa_real_t), intent(out), optional :: df_I_cst, df_J_cst
+      real, intent(out)       :: df_I_var, df_J_var
+      real, intent(out), optional :: df_I_cst, df_J_cst
 
       logical :: do_invert = .false.
-      real(bsa_real_t) :: ang
+      real :: ang
 
 
       if (present(df_I_cst) .and. present(df_J_cst)) do_invert = .true.
@@ -244,8 +244,8 @@ contains
       endif
 
       ! BUG: needed to avoid machine rounding precision
-      if (abs(df_I_var) < MACHINE_PRECISION) df_I_var = 0._bsa_real_t
-      if (abs(df_J_var) < MACHINE_PRECISION) df_J_var = 0._bsa_real_t
+      if (abs(df_I_var) < MACHINE_PRECISION) df_I_var = 0.
+      if (abs(df_J_var) < MACHINE_PRECISION) df_J_var = 0.
 
 
       if (do_invert) then ! BUG: ?????????
@@ -254,8 +254,8 @@ contains
          df_J_cst = - df_I_var
 
          ! BUG: needed to avoid machine rounding precision
-         if (abs(df_I_cst) < MACHINE_PRECISION) df_I_cst = 0._bsa_real_t
-         if (abs(df_J_cst) < MACHINE_PRECISION) df_J_cst = 0._bsa_real_t
+         if (abs(df_I_cst) < MACHINE_PRECISION) df_I_cst = 0.
+         if (abs(df_J_cst) < MACHINE_PRECISION) df_J_cst = 0.
       endif
 
    end subroutine getRotatedUnaryDF
@@ -368,10 +368,10 @@ contains
       class(MPoint_t), intent(in)    :: Cp, P1, P2
       logical, intent(in)            :: is_refinement
       character(len = *), intent(in), optional :: val_types
-      real(bsa_real_t), intent(in), optional   :: val1, val2
+      real, intent(in), optional   :: val1, val2
 
       integer   :: ni, nj
-      real(bsa_real_t) :: dfi, dfj
+      real :: dfi, dfj
 
 
       if (is_refinement) then
@@ -487,7 +487,7 @@ contains
    module subroutine compute(this)
       class(MTriangZone_t), intent(inout) :: this
 
-      real(bsa_real_t) :: df_CA, df_CB
+      real :: df_CA, df_CB
 
 
       ! get (full) deltas in straight directions
@@ -539,7 +539,7 @@ contains
    module subroutine undumpTZ(this)
       !! Undumps a triang zone data for later reconstruction
       class(MTriangZone_t), intent(inout) :: this
-      real(bsa_real_t) :: rval1, rval2
+      real :: rval1, rval2
 
       ! 3 pts
       read(io_units_bfmdump(1)) rval1, rval2
@@ -589,7 +589,7 @@ contains
       !! Implementation of triang zone interpolation methods
       class(MTriangZone_t), intent(inout) :: this
 #ifndef BSA_USE_POD_DATA_CACHING
-      real(bsa_real_t), intent(in)  :: bfm(:, :)
+      real, intent(in)  :: bfm(:, :)
 #endif
       class(*), pointer, intent(in) :: pdata
 

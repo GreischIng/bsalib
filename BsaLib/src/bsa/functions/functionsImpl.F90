@@ -46,24 +46,22 @@ submodule(BsaLib_Functions) BsaLib_FunctionsImpl
 #ifdef BSA_USE_SVD_METHOD
       SUBROUTINE POD__( JOBU, JOBVT, M, N, A, LDA, S, U, LDU, &
                            VT, LDVT, WORK, LWORK, INFO )
-         import bsa_real_t
          !    .. Scalar Arguments ..
          CHARACTER          JOBU, JOBVT
          INTEGER            LDA, LDU, LDVT, M, N
          integer            info, lwork
          !     .. Array Arguments ..
-         real(bsa_real_t)   A( LDA, * ), S( * ), U( LDU, * ),&
+         real   A( LDA, * ), S( * ), U( LDU, * ),&
                                VT( LDVT, * ), WORK( * )
       end subroutine
 #else
       SUBROUTINE POD__( JOBZ, UPLO, N, A, LDA, W, WORK, LWORK, INFO )
-         import bsa_real_t
          !     .. Scalar Arguments ..
          CHARACTER          JOBZ, UPLO
          INTEGER            INFO, LDA, LWORK, N
          !     ..
          !     .. Array Arguments ..
-         real(bsa_real_t)   A( LDA, * ), W( * ), WORK( * )
+         real   A( LDA, * ), W( * ), WORK( * )
       END SUBROUTINE
 #endif
    end interface
@@ -101,32 +99,22 @@ contains
 
 
    module subroutine prefetchSVDWorkDim_()
-      real(bsa_real_t), allocatable :: tmpmat(:, :)    ! Eric
-      real(bsa_real_t), allocatable :: tmpv(:)
+      real :: tmpmat(NNODESL, NNODESL)
+      ! real, allocatable :: tmpmat(:, :)
 
-      real(bsa_real_t), dimension(1) :: optWork
-      real(bsa_real_t), dimension(1) :: tmp1arr
+      real, dimension(NNODESL) :: tmpv
+
+      real, dimension(1) :: optWork
+      real, dimension(1) :: tmp1arr
 
       integer :: istat
       character(len = 256) :: emsg
-
       if (.not. allocated(MSHR_SVD_INFO)) then
          allocate(MSHR_SVD_INFO, stat=istat, errmsg=emsg)
          if (istat /= 0) call allocKOMsg('MSHR_SVD_INFO', istat, emsg)
       endif
-      if (.not. allocated(tmpmat)) then
-         allocate(tmpmat(NNODESL, NNODESL), stat=istat, errmsg=emsg)
-         if (istat /= 0) call allocKOMsg('tmpmat', istat, emsg)
-      endif
-      if (.not. allocated(tmpv)) then
-         allocate(tmpv(NNODESL), stat=istat, errmsg=emsg)
-         if (istat /= 0) call allocKOMsg('tmpv', istat, emsg)
-      endif
-
       MSHR_SVD_INFO = 0
-      tmpmat = 0.  ! Eric
-      tmpv = 0.    ! Eric
-      
+
 #ifdef BSA_USE_SVD_METHOD
    call POD__(&
            'O' &        ! min(M,N) columns of U are returned in array U
@@ -137,7 +125,7 @@ contains
          , NNODESL &
          , tmpv    &
          , tmp1arr &    ! U array
-         , 1       &
+         , 1       & 
          , tmp1arr &
          , 1       &
          , optWork &
@@ -213,9 +201,9 @@ contains
 #if (_WIN32 & __INTEL_COMPILER)
 !DIR$ ATTRIBUTES FORCEINLINE :: getNPODModesByThreshold_
 #endif
-      real(bsa_real_t), intent(in), contiguous :: eigvals(:)
-      real(bsa_real_t), intent(in) :: rlim
-      real(bsa_real_t) :: limval
+      real, intent(in), contiguous :: eigvals(:)
+      real, intent(in) :: rlim
+      real :: limval
 
 #ifdef BSA_USE_SVD_METHOD
 # define __IDX 1
@@ -254,10 +242,10 @@ contains
 
 
    module subroutine getFM_full_tnm_scalar_msh_(bfm, fi, fj)
-      real(bsa_real_t), intent(inout), contiguous :: bfm(:, :)
-      real(bsa_real_t), intent(in), contiguous :: fi(:), fj(:)
+      real, intent(inout), contiguous :: bfm(:, :)
+      real, intent(in), contiguous :: fi(:), fj(:)
 
-      real(bsa_real_t) :: fiPfj(1), abs_fi, abs_fj, abs_fiPfj
+      real :: fiPfj(1), abs_fi, abs_fj, abs_fiPfj
 
       ! indexes
       integer :: itc, tc, tcP3, iposM
@@ -270,26 +258,26 @@ contains
       integer :: ilk
 
       ! modal matrix slices
-      real(bsa_real_t) :: phiJ(1, NLIBSL), phiI(NLIBSL, 1) !, phiK(1, 1, NLIBSL)
-      real(bsa_real_t) :: phiK_(NMODES_EFF), phiK
+      real :: phiJ(1, NLIBSL), phiI(NLIBSL, 1) !, phiK(1, 1, NLIBSL)
+      real :: phiK_(NMODES_EFF), phiK
 
       ! wind forces coeffs
-      real(bsa_real_t), dimension(1, NLIBSL)    :: ajU, aj
-      real(bsa_real_t), dimension(NLIBSL, 1)    :: aiU, ai, akU, ak
+      real, dimension(1, NLIBSL)    :: ajU, aj
+      real, dimension(NLIBSL, 1)    :: aiU, ai, akU, ak
 
       ! basic PSDs
-      real(bsa_real_t), dimension(1, NNODESL) :: S_IJK_fi, S_IJK_fj, S_IJK_fiPfj
-      real(bsa_real_t) :: S_K_fi, S_K_fj, S_K_fiPfj
-      real(bsa_real_t) :: S_J_fi, S_J_fj, S_J_fiPfj
-      real(bsa_real_t) :: S_I_fi, S_I_fj, S_I_fiPfj
+      real, dimension(1, NNODESL) :: S_IJK_fi, S_IJK_fj, S_IJK_fiPfj
+      real :: S_K_fi, S_K_fj, S_K_fiPfj
+      real :: S_J_fi, S_J_fj, S_J_fiPfj
+      real :: S_I_fi, S_I_fj, S_I_fiPfj
 
       ! nodal spactial correlations
-      real(bsa_real_t) :: corrIJ, corrIK, corrJK
+      real :: corrIJ, corrIK, corrJK
 
       ! crossed PSDs
-      real(bsa_real_t) :: S_JK_fi, S_JK_fj
-      real(bsa_real_t) :: term1, term2, term3, BF_IJK_ijk(NLIBSL, NLIBSL)
-      real(bsa_real_t), dimension(NLIBSL, NLIBSL) :: tmp1, tmp2, tmp3
+      real :: S_JK_fi, S_JK_fj
+      real :: term1, term2, term3, BF_IJK_ijk(NLIBSL, NLIBSL)
+      real, dimension(NLIBSL, NLIBSL) :: tmp1, tmp2, tmp3
 
       ! frequencies values
       fiPfj(1)  = fi(1) + fj(1)
@@ -300,7 +288,7 @@ contains
 
       ! NOTE: preinitalise to 0, to avoid uninitialised precision errors
       !       Like using memset() in C.
-      bfm = 0._bsa_real_t
+      bfm = 0.
 
       do itc = 1, NTCOMPS
 
@@ -488,45 +476,45 @@ contains
 # define __export_POD_trunc_id__  1
 #endif
 use BsaLib_Data, only: iun_POD_trunc_, do_export_POD_info_
-      real(bsa_real_t), intent(inout), contiguous :: bfm(:, :)
-      real(bsa_real_t), intent(in),    contiguous :: fi(:), fj(:)
+      real, intent(inout), contiguous :: bfm(:, :)
+      real, intent(in),    contiguous :: fi(:), fj(:)
 
 #ifdef BSA_USE_POD_DATA_CACHING
 # define __EGVL_w2 D_S_uvw_w2_ptr
 # define __EGVT_w2 S_uvw_w2_ptr
 
       integer   :: nfi_, nfj_, ifi, ifj
-      real(bsa_real_t) :: fi_
+      real :: fi_
       integer, allocatable   :: npodw2(:)
 
-      real(bsa_real_t), allocatable, target  :: D_S_uvw_w2(:, :)
-      real(bsa_real_t),              pointer :: D_S_uvw_w2_ptr(:) => null()
+      real, allocatable, target  :: D_S_uvw_w2(:, :)
+      real,              pointer :: D_S_uvw_w2_ptr(:) => null()
 
-      real(bsa_real_t), allocatable, target  :: S_uvw_w2(:, :, :)
-      real(bsa_real_t),              pointer :: S_uvw_w2_ptr(:, :) => null()
+      real, allocatable, target  :: S_uvw_w2(:, :, :)
+      real,              pointer :: S_uvw_w2_ptr(:, :) => null()
 #else
 # define __EGVL_w2 D_S_uvw_w2
 # define __EGVT_w2 S_uvw_w2
 
-      real(bsa_real_t)              :: D_S_uvw_w2(NNODESL)
-      real(bsa_real_t), allocatable :: S_uvw_w2(:, :)
+      real              :: D_S_uvw_w2(NNODESL)
+      real, allocatable :: S_uvw_w2(:, :)
 #endif
 
-      real(bsa_real_t)              :: D_S_uvw_w1(NNODESL)   ! singular values vectors (DECREASING ordering!)
-      real(bsa_real_t), allocatable :: S_uvw_w1(:, :)
+      real              :: D_S_uvw_w1(NNODESL)   ! singular values vectors (DECREASING ordering!)
+      real, allocatable :: S_uvw_w1(:, :)
 
-      real(bsa_real_t)              :: D_S_uvw_w1w2(NNODESL)
-      real(bsa_real_t), allocatable :: S_uvw_w1w2(:, :)
+      real              :: D_S_uvw_w1w2(NNODESL)
+      real, allocatable :: S_uvw_w1w2(:, :)
 
       ! for SVD related routines
       integer :: lwork, info
-      real(bsa_real_t), allocatable :: work_arr(:)
+      real, allocatable :: work_arr(:)
 
-      real(bsa_real_t) :: tmpv(1, NNODESL)   ! tmp vec for interfacing, BUG: might be avoided?
+      real :: tmpv(1, NNODESL)   ! tmp vec for interfacing, BUG: might be avoided?
 
-      real(bsa_real_t), dimension(NNODESL, 1)    :: eigvp, eigvq
-      real(bsa_real_t), dimension(NMODES_EFF, 1) :: tmpm1, tmpm2, tmpm3
-      real(bsa_real_t) :: tmpDp, tmpTq, tmpo, tmpn
+      real, dimension(NNODESL, 1)    :: eigvp, eigvq
+      real, dimension(NMODES_EFF, 1) :: tmpm1, tmpm2, tmpm3
+      real :: tmpDp, tmpTq, tmpo, tmpn
 
       ! wind turbulent comps indexes
       integer :: itc, tc, tcP3
@@ -536,10 +524,9 @@ use BsaLib_Data, only: iun_POD_trunc_, do_export_POD_info_
       integer :: p, q
       integer :: m, n, o, posm, posf
 
-      real(bsa_real_t) :: fiPfj_(1)
+      real :: fiPfj_(1)
 
-
-      bfm = 0._bsa_real_t
+      bfm = 0.
 
 #ifdef BSA_USE_POD_DATA_CACHING
       nfi_ = size(fi)
@@ -633,7 +620,7 @@ use BsaLib_Data, only: iun_POD_trunc_, do_export_POD_info_
             , NNODESL    &    ! n. of rows M
             , NNODESL    &    ! n. of cols N
             , S_uvw_w1   &    ! A matrix (overwritten with left-singular vectors)
-            , NNODESL    &
+            , NNODESL   &
             , D_S_uvw_w1 &    ! singular values
             , tmpv       &    ! U
             , 1          &
@@ -1002,20 +989,20 @@ use BsaLib_Data, only: iun_POD_trunc_, do_export_POD_info_
 
 
    module subroutine getRM_full_scalar_msh_(brm, fi, fj, bfm)
-      real(bsa_real_t), intent(inout), contiguous :: brm(:, :)
-      real(bsa_real_t), intent(in), contiguous :: fi(:), fj(:)
-      real(bsa_real_t), intent(in), contiguous :: bfm(:, :)
+      real, intent(inout), contiguous :: brm(:, :)
+      real, intent(in), contiguous :: fi(:), fj(:)
+      real, intent(in), contiguous :: bfm(:, :)
 
       integer   :: i, j
-      real(bsa_real_t) :: wi, wj, wiPwj
+      real :: wi, wj, wiPwj
       integer   :: posm, posf, imk, imj, imi
 
-      real(bsa_real_t), dimension(NMODES_EFF) :: Cdiag, rpart, ipart, htmp
-      real(bsa_real_t), dimension(NMODES_EFF) :: H1r, H1i
-      real(bsa_real_t), dimension(NMODES_EFF) :: H2r, H2i
-      real(bsa_real_t), dimension(NMODES_EFF) :: H12r, H12i
+      real, dimension(NMODES_EFF) :: Cdiag, rpart, ipart, htmp
+      real, dimension(NMODES_EFF) :: H1r, H1i
+      real, dimension(NMODES_EFF) :: H2r, H2i
+      real, dimension(NMODES_EFF) :: H12r, H12i
 
-      real(bsa_real_t) :: H12k_r, H12k_i, H2j_r, H2j_i
+      real :: H12k_r, H12k_i, H2j_r, H2j_i
 
 
       posf = 1
@@ -1094,26 +1081,26 @@ use BsaLib_Data, only: iun_POD_trunc_, do_export_POD_info_
 
 
    module subroutine getFM_diag_tnm_scalar_msh_(bfm, fi, fj)
-      real(bsa_real_t), intent(inout), contiguous :: bfm(:, :)
-      real(bsa_real_t), intent(in), contiguous :: fi(:), fj(:)
+      real, intent(inout), contiguous :: bfm(:, :)
+      real, intent(in), contiguous :: fi(:), fj(:)
 
-      real(bsa_real_t) :: fiPfj(1)
+      real :: fiPfj(1)
 
       integer :: itc, tc, tcP3, imode
       integer :: posi, inode, node, ilibk
 
-      real(bsa_real_t), dimension(1, NNODESL) :: Suvw_fi, Suvw_fj, Suvw_fiPfj
-      real(bsa_real_t), dimension(NNODESL) :: Suvw_IJ, Suvw_IJI, Suvw_IJJ
+      real, dimension(1, NNODESL) :: Suvw_fi, Suvw_fj, Suvw_fiPfj
+      real, dimension(NNODESL) :: Suvw_IJ, Suvw_IJI, Suvw_IJJ
 
-      real(bsa_real_t) :: akU, ak, phik(NMODES_EFF)
-      real(bsa_real_t), dimension(NLIBSL, 1) :: aiU, ai
-      real(bsa_real_t), dimension(1, NLIBSL) :: ajU, aj
-      real(bsa_real_t), dimension(NLIBSL, NMODES_EFF) :: phi_
+      real :: akU, ak, phik(NMODES_EFF)
+      real, dimension(NLIBSL, 1) :: aiU, ai
+      real, dimension(1, NLIBSL) :: ajU, aj
+      real, dimension(NLIBSL, NMODES_EFF) :: phi_
 
-      real(bsa_real_t) :: BF_ijk_I(NLIBSL, NLIBSL)
-      real(bsa_real_t), dimension(NLIBSL, NLIBSL) :: tmp1, tmp2, tmp3
+      real :: BF_ijk_I(NLIBSL, NLIBSL)
+      real, dimension(NLIBSL, NLIBSL) :: tmp1, tmp2, tmp3
 
-      bfm = 0._bsa_real_t
+      bfm = 0.
 
       fiPfj(1) = fi(1) + fj(1)
 
@@ -1195,18 +1182,18 @@ use BsaLib_Data, only: iun_POD_trunc_, do_export_POD_info_
 
 
    module subroutine getRM_diag_scalar_msh_(brm, fi, fj, bfm)
-      real(bsa_real_t), intent(inout), contiguous :: brm(:, :)
-      real(bsa_real_t), intent(in), contiguous :: fi(:), fj(:)
-      real(bsa_real_t), intent(in), contiguous :: bfm(:, :)
+      real, intent(inout), contiguous :: brm(:, :)
+      real, intent(in), contiguous :: fi(:), fj(:)
+      real, intent(in), contiguous :: bfm(:, :)
 
       integer     :: i, j, posf
-      real(bsa_real_t)   :: wi, wj, wiPwj
-      integer(bsa_int_t) :: imi
+      real   :: wi, wj, wiPwj
+      integer :: imi
 
-      real(bsa_real_t), dimension(NMODES_EFF) :: Cdiag, rpart, ipart, htmp
-      real(bsa_real_t), dimension(NMODES_EFF) :: H1r, H1i
-      real(bsa_real_t), dimension(NMODES_EFF) :: H2r, H2i
-      real(bsa_real_t), dimension(NMODES_EFF) :: H12r, H12i
+      real, dimension(NMODES_EFF) :: Cdiag, rpart, ipart, htmp
+      real, dimension(NMODES_EFF) :: H1r, H1i
+      real, dimension(NMODES_EFF) :: H2r, H2i
+      real, dimension(NMODES_EFF) :: H12r, H12i
 
       posf = 1
       do i = 1, size(fi)
@@ -1283,9 +1270,9 @@ use BsaLib_Data, only: iun_POD_trunc_, do_export_POD_info_
    !>      convention on PULSATION.
    !>      Please, adapt it to the case of convention over FREQUENCIES.
    module subroutine getFM_full_tnm_vect_cls_(f, Suvw, psd, bisp)
-      real(bsa_real_t), intent(in) :: f(NFREQS)
-      real(bsa_real_t), intent(in) :: Suvw(NFREQS, NPSDEL)
-      real(bsa_real_t), allocatable, intent(inout) :: psd(:, :), bisp(:, :, :)
+      real, intent(in) :: f(NFREQS)
+      real, intent(in) :: Suvw(NFREQS, NPSDEL)
+      real, allocatable, intent(inout) :: psd(:, :), bisp(:, :, :)
 
       integer :: iin, ien, itmp, ifrj, i_cycle
 #ifdef _OPENMP
@@ -1302,26 +1289,26 @@ use BsaLib_Data, only: iun_POD_trunc_, do_export_POD_info_
       integer :: ni, nj, nk
 
       ! modes indexed values
-      real(bsa_real_t), dimension(NMODES_EFF, 2) :: phik_, phij_, phii_
-      real(bsa_real_t) :: phij_Ub_, phij_u_, phik_Ub_, phik_u_
+      real, dimension(NMODES_EFF, 2) :: phik_, phij_, phii_
+      real :: phij_Ub_, phij_u_, phik_Ub_, phik_u_
       integer :: posm_
       integer :: imk, imj, imi
 
-      real(bsa_real_t) :: f_abs(NFREQS)
+      real :: f_abs(NFREQS)
 
       ! local nodal correlations
-      real(bsa_real_t) :: corrJK, corrIK, corrIJ
+      real :: corrJK, corrIK, corrIJ
 
       ! wfc extractions
-      integer(bsa_int_t)   :: tcP3
+      integer   :: tcP3
 
       ! PSDs local
-      real(bsa_real_t), allocatable :: S_uvw_i(:), S_uvw_j(:), S_uvw_k(:), PSDF_jk_JK_w(:)
-      real(bsa_real_t), allocatable :: S_uvw_JK(:), S_uvw_IK(:), S_uvw_IJ(:)
-      real(bsa_real_t), allocatable :: S_uvw_IK_w1w2(:), S_uvw_IJ_w1w2(:)
+      real, allocatable :: S_uvw_i(:), S_uvw_j(:), S_uvw_k(:), PSDF_jk_JK_w(:)
+      real, allocatable :: S_uvw_JK(:), S_uvw_IK(:), S_uvw_IJ(:)
+      real, allocatable :: S_uvw_IK_w1w2(:), S_uvw_IJ_w1w2(:)
 
       ! BF local
-      real(bsa_real_t), allocatable :: BF_ijk_IJK_w_w2(:), tmp1(:), tmp2(:), tmp3(:)
+      real, allocatable :: BF_ijk_IJK_w_w2(:), tmp1(:), tmp2(:), tmp3(:)
 
       character(len = 256) :: emsg
       !========================================================================
@@ -1347,7 +1334,7 @@ use BsaLib_Data, only: iun_POD_trunc_, do_export_POD_info_
       ! these are needed regardlessly of if PSDs or BISPs
       allocate(psd(NFREQS, dimM_psd_), stat=itc, errmsg=emsg)
       if (itc /= 0) call allocKOMsg('psd', itc, emsg)
-      psd = 0._bsa_real_t
+      psd = 0.
 
       allocate(S_uvw_k(NFREQS), stat=itc, errmsg=emsg)
       if (itc /= 0) call allocKOMsg('S_uvw_k', itc, emsg)
@@ -1365,7 +1352,7 @@ use BsaLib_Data, only: iun_POD_trunc_, do_export_POD_info_
 
          allocate(bisp(NFREQS, NFREQS, dimM_bisp_), stat=itc, errmsg=emsg)
          if (itc /= 0) call allocKOMsg('bisp', itc, emsg)
-         bisp = 0._bsa_real_t
+         bisp = 0.
 
          allocate(bf_ijk_IJK_w_w2(NFREQS), stat=itc, errmsg=emsg)
          if (itc /= 0) call allocKOMsg('bf_ijk_IJK_w_w2', itc, emsg)
@@ -1536,7 +1523,7 @@ use BsaLib_Data, only: iun_POD_trunc_, do_export_POD_info_
 
             i_cycle = i_cycle + 1
             print '(1x, a, " done ", f10.4, " %")', &
-               INFOMSG, real(i_cycle, bsa_real_t)/real(NNODESL*NTCOMPS, bsa_real_t) * 100._bsa_real_t
+               INFOMSG, real(i_cycle)/real(NNODESL*NTCOMPS) * 100.
         enddo ! k node
       enddo ! itc
 
@@ -1569,8 +1556,8 @@ use BsaLib_Data, only: iun_POD_trunc_, do_export_POD_info_
 
 
    module subroutine getRM_full_vect_cls_(f, psd, bisp)
-      real(bsa_real_t), intent(in)                 :: f(NFREQS)
-      real(bsa_real_t), allocatable, intent(inout) :: psd(:, :), bisp(:, :, :)
+      real, intent(in)                 :: f(NFREQS)
+      real, allocatable, intent(inout) :: psd(:, :), bisp(:, :, :)
 
       integer :: ifrj
       integer :: posm_psd = 1, posm_bisp = 1
@@ -1578,10 +1565,10 @@ use BsaLib_Data, only: iun_POD_trunc_, do_export_POD_info_
       ! modal indexed
       integer :: imi, imj, imk, mi
 
-      real(bsa_real_t) :: omegas(NFREQS, 1)
-      real(bsa_real_t), allocatable :: r_part(:, :), i_part(:, :), h_tmp(:, :), h_tmp2(:, :)
-      real(bsa_real_t), allocatable :: Hr_w(:, :), Hi_w(:, :)
-      real(bsa_real_t), allocatable :: Hr_w1w2(:, :, :), Hi_w1w2(:, :, :)
+      real :: omegas(NFREQS, 1)
+      real, allocatable :: r_part(:, :), i_part(:, :), h_tmp(:, :), h_tmp2(:, :)
+      real, allocatable :: Hr_w(:, :), Hi_w(:, :)
+      real, allocatable :: Hr_w1w2(:, :, :), Hi_w1w2(:, :, :)
       !=====================================================================================
 
       ! BUG: check logic if correct
@@ -1718,9 +1705,9 @@ use BsaLib_Data, only: iun_POD_trunc_, do_export_POD_info_
 
 
    module subroutine getFM_diag_tnlm_vect_cls_(f, Suvw, psd, bisp)
-      real(bsa_real_t), intent(in) :: f(NFREQS)
-      real(bsa_real_t), intent(in) :: Suvw(NFREQS, NPSDEL)
-      real(bsa_real_t), intent(inout), allocatable :: psd(:, :), bisp(:, :, :)
+      real, intent(in) :: f(NFREQS)
+      real, intent(in) :: Suvw(NFREQS, NPSDEL)
+      real, intent(inout), allocatable :: psd(:, :), bisp(:, :, :)
 
       integer :: iin = 0, ien = 0, itmp = 0, ifrj = 0
       integer :: i_n_pad = 0, i_pad_len = 0
@@ -1736,21 +1723,21 @@ use BsaLib_Data, only: iun_POD_trunc_, do_export_POD_info_
       integer :: ilk, ilj, ili, lk, lj, li
 
       ! modal matrix related
-      real(bsa_real_t), dimension(NMODES_EFF) :: phik, phij, phii
+      real, dimension(NMODES_EFF) :: phik, phij, phii
       integer :: posk, posj, posi
 
       ! wind forces coeffs
-      real(bsa_real_t) :: ai, aiU, aj, ajU, ak, akU
+      real :: ai, aiU, aj, ajU, ak, akU
 
       ! modes related
       integer :: im
 
       !
-      ! real(bsa_real_t) :: S_N_curr(settings%nfreqs_)
-      real(bsa_real_t), allocatable :: Suvw_N_T(:, :), BF_ijk_III_w1w2(:, :)
-      real(bsa_real_t), allocatable :: tmp1(:, :), tmp2(:, :), tmp3(:, :)
-      real(bsa_real_t), allocatable :: Suvw_N_w1w2(:, :), Suvw_N_pad(:)
-      real(bsa_real_t), allocatable :: PSDF_jk_JJ_w(:)
+      ! real :: S_N_curr(settings%nfreqs_)
+      real, allocatable :: Suvw_N_T(:, :), BF_ijk_III_w1w2(:, :)
+      real, allocatable :: tmp1(:, :), tmp2(:, :), tmp3(:, :)
+      real, allocatable :: Suvw_N_w1w2(:, :), Suvw_N_pad(:)
+      real, allocatable :: PSDF_jk_JJ_w(:)
 
 
 #ifdef BSA_DEBUG
@@ -1770,7 +1757,7 @@ use BsaLib_Data, only: iun_POD_trunc_, do_export_POD_info_
 
          allocate(PSDF_jk_JJ_w(NFREQS))
          allocate(psd(NFREQS, dimM_psd_))
-         psd = 0._bsa_real_t
+         psd = 0.
       endif
 
       if (settings%i_compute_bisp_ == 1) then
@@ -1785,7 +1772,7 @@ use BsaLib_Data, only: iun_POD_trunc_, do_export_POD_info_
 
          allocate(BF_ijk_III_w1w2(NFREQS, NFREQS))
          allocate(bisp(NFREQS, NFREQS, dimM_bisp_))
-         bisp = 0._bsa_real_t
+         bisp = 0.
       endif
 
 
@@ -1876,7 +1863,7 @@ use BsaLib_Data, only: iun_POD_trunc_, do_export_POD_info_
                               phik(im) * phij(im) * phii(im) * BF_ijk_III_w1w2
                         enddo
 #else
-                        do concurrent (im = 1:NMODES_EFF)
+                        do im = 1,NMODES_EFF
                            bisp(:, :, im) = bisp(:, :, im) + &
                               phik(im) * phij(im) * phii(im) * BF_ijk_III_w1w2
                         enddo
@@ -1920,7 +1907,7 @@ use BsaLib_Data, only: iun_POD_trunc_, do_export_POD_info_
 
 #ifdef BSA_DEBUG
             print '(1x, 2a, f10.4, " %")', &
-               INFOMSG, '  done  ', real(in, bsa_real_t) / NNODESL * 100
+               INFOMSG, '  done  ', real(in) / NNODESL * 100
 #endif
          enddo ! nodes
       enddo ! turb comps
@@ -1946,8 +1933,8 @@ use BsaLib_Data, only: iun_POD_trunc_, do_export_POD_info_
 
 
    module subroutine getRM_diag_vect_cls_(f, psd, bisp)
-      real(bsa_real_t), intent(in)                 :: f(NFREQS)
-      real(bsa_real_t), allocatable, intent(inout) :: psd(:, :), bisp(:, :, :)
+      real, intent(in)                 :: f(NFREQS)
+      real, allocatable, intent(inout) :: psd(:, :), bisp(:, :, :)
 
       integer :: ifrj
       integer :: pos = 1
@@ -1955,11 +1942,11 @@ use BsaLib_Data, only: iun_POD_trunc_, do_export_POD_info_
       ! modal indexed
       integer :: imi, mi
 
-      real(bsa_real_t) :: omegas(NFREQS, 1)
-      real(bsa_real_t) :: Mgi, Kgi, Cgi
-      real(bsa_real_t), allocatable :: r_part(:, :), i_part(:, :), h_tmp(:, :)
-      real(bsa_real_t), allocatable :: Hr_w(:), Hi_w(:)
-      real(bsa_real_t), allocatable :: Hr_w1w2(:, :), Hi_w1w2(:, :)
+      real :: omegas(NFREQS, 1)
+      real :: Mgi, Kgi, Cgi
+      real, allocatable :: r_part(:, :), i_part(:, :), h_tmp(:, :)
+      real, allocatable :: Hr_w(:), Hi_w(:)
+      real, allocatable :: Hr_w1w2(:, :), Hi_w1w2(:, :)
 
 
 #ifdef BSA_DEBUG
@@ -2093,17 +2080,17 @@ use BsaLib_Data, only: iun_POD_trunc_, do_export_POD_info_
    !>      convention on PULSATION.
    !>      Please, adapt it to the case of convention over FREQUENCIES.
    pure module subroutine getFM_full_tnm_scalar_cls_(ii, ij, fi, fj, Suvw, Suvw_pad, psd, bisp)
-      integer(bsa_int_t), intent(in)  :: ii, ij
-      real(bsa_real_t), intent(in)    :: fi, fj
-      real(bsa_real_t), intent(in)    :: Suvw(NFREQS, NPSDEL)
-      real(bsa_real_t), intent(in)    :: Suvw_pad(NPSDEL)
-      real(bsa_real_t), intent(inout) :: psd(dimM_psd_), bisp(dimM_bisp_)
+      integer, intent(in)  :: ii, ij
+      real, intent(in)    :: fi, fj
+      real, intent(in)    :: Suvw(NFREQS, NPSDEL)
+      real, intent(in)    :: Suvw_pad(NPSDEL)
+      real, intent(inout) :: psd(dimM_psd_), bisp(dimM_bisp_)
 
       ! turb components related
       integer :: itc, tc_posN, tc_pk, tc_pj
 
       ! freqs related
-      real(bsa_real_t) :: fiabs, fjabs, fiPfj, fiPfjabs
+      real :: fiabs, fjabs, fiPfj, fiPfjabs
 
       ! nodes indexed values
       integer :: pos_nk, pos_nj
@@ -2111,25 +2098,25 @@ use BsaLib_Data, only: iun_POD_trunc_, do_export_POD_info_
       integer :: nj, nk
 
       ! modes indexed values
-      real(bsa_real_t), dimension(NMODES_EFF, 2) :: phik_, phij_
-      real(bsa_real_t) :: phij_Ub_, phij_u_, phik_Ub_, phik_u_
+      real, dimension(NMODES_EFF, 2) :: phik_, phij_
+      real :: phij_Ub_, phij_u_, phik_Ub_, phik_u_
       integer   :: posm
       integer   :: imk, imj, imi
 
       ! local nodal correlations
-      real(bsa_real_t) :: corrJK
+      real :: corrJK
 
       ! wfc extractions
       integer :: tc, tcP3
 
       ! PSDs local
-      real(bsa_real_t) :: S_uvw_j_i,  S_uvw_j_j,  S_uvw_j_ij
-      real(bsa_real_t) :: S_uvw_k_i,  S_uvw_k_j,  S_uvw_k_ij
-      real(bsa_real_t) :: S_uvw_JK_i, S_uvw_JK_j
+      real :: S_uvw_j_i,  S_uvw_j_j,  S_uvw_j_ij
+      real :: S_uvw_k_i,  S_uvw_k_j,  S_uvw_k_ij
+      real :: S_uvw_JK_i, S_uvw_JK_j
       !========================================================================
 
-      psd  = 0._bsa_real_t
-      bisp = 0._bsa_real_t
+      psd  = 0.
+      bisp = 0.
 
       fiabs = abs(fi)
       fjabs = abs(fj)
@@ -2192,13 +2179,13 @@ use BsaLib_Data, only: iun_POD_trunc_, do_export_POD_info_
                      integer :: ini, ni, pos_ni
                      integer :: tc_pi
 
-                     real(bsa_real_t) :: corrIK, corrIJ
-                     real(bsa_real_t) :: S_uvw_i_i,  S_uvw_i_j,  S_uvw_i_ij
-                     real(bsa_real_t) :: S_uvw_IK_j, S_uvw_IK_ij
-                     real(bsa_real_t) :: S_uvw_IJ_i, S_uvw_IJ_ij
-                     real(bsa_real_t) :: tmp1, tmp2, tmp3
+                     real :: corrIK, corrIJ
+                     real :: S_uvw_i_i,  S_uvw_i_j,  S_uvw_i_ij
+                     real :: S_uvw_IK_j, S_uvw_IK_ij
+                     real :: S_uvw_IJ_i, S_uvw_IJ_ij
+                     real :: tmp1, tmp2, tmp3
 
-                     real(bsa_real_t), dimension(NMODES_EFF, 2) :: phii_
+                     real, dimension(NMODES_EFF, 2) :: phii_
 
 
                      do ini = 1, NNODESL
@@ -2300,18 +2287,18 @@ use BsaLib_Data, only: iun_POD_trunc_, do_export_POD_info_
 
 
    module subroutine getRM_full_scalar_cls_(ii, ij, fi, fj, psdin, psdout, bispin, bispout)
-      integer(bsa_int_t), intent(in)  :: ii, ij
-      real(bsa_real_t), intent(in)    :: fi, fj
-      real(bsa_real_t), intent(in)    :: psdin(dimM_psd_), bispin(dimM_bisp_)
-      real(bsa_real_t), intent(out)   :: psdout(dimM_psd_), bispout(dimM_bisp_)
+      integer, intent(in)  :: ii, ij
+      real, intent(in)    :: fi, fj
+      real, intent(in)    :: psdin(dimM_psd_), bispin(dimM_bisp_)
+      real, intent(out)   :: psdout(dimM_psd_), bispout(dimM_bisp_)
 
-      real(bsa_real_t) :: wi
+      real :: wi
       integer :: posm, imk, imj
 
-      real(bsa_real_t), dimension(NMODES_EFF) :: Cdiag, rpart, ipart, htmp
-      real(bsa_real_t), dimension(NMODES_EFF) :: H1r, H1i
+      real, dimension(NMODES_EFF) :: Cdiag, rpart, ipart, htmp
+      real, dimension(NMODES_EFF) :: H1r, H1i
 
-      real(bsa_real_t) :: H2j_r, H2j_i
+      real :: H2j_r, H2j_i
 
 
       wi = fi * CST_PIt2
@@ -2355,10 +2342,10 @@ use BsaLib_Data, only: iun_POD_trunc_, do_export_POD_info_
       ! BISPr
 
       block
-         real(bsa_real_t), dimension(NMODES_EFF) :: H2r, H2i
-         real(bsa_real_t), dimension(NMODES_EFF) :: H12r, H12i
-         real(bsa_real_t) :: H12k_r, H12k_i
-         real(bsa_real_t) :: wj, wiPwj, tmp1, tmp2, tmp3, tmp4
+         real, dimension(NMODES_EFF) :: H2r, H2i
+         real, dimension(NMODES_EFF) :: H12r, H12i
+         real :: H12k_r, H12k_i
+         real :: wj, wiPwj, tmp1, tmp2, tmp3, tmp4
          integer   :: imi
 
          wj    = fj * CST_PIt2
@@ -2431,22 +2418,22 @@ use BsaLib_Data, only: iun_POD_trunc_, do_export_POD_info_
    !>      convention on PULSATION.
    !>      Please, adapt it to the case of convention over FREQUENCIES.
    pure module subroutine getFM_diag_tnlm_scalar_cls_(ii, ij, fi, fj, Suvw, Suvw_pad, psd, bisp)
-      integer(bsa_int_t), intent(in)  :: ii, ij
-      real(bsa_real_t), intent(in)    :: fi, fj
-      real(bsa_real_t), intent(in)    :: Suvw(NFREQS, NPSDEL)
-      real(bsa_real_t), intent(in)    :: Suvw_pad(NPSDEL)
-      real(bsa_real_t), intent(inout) :: psd(dimM_psd_), bisp(dimM_bisp_)
+      integer, intent(in)  :: ii, ij
+      real, intent(in)    :: fi, fj
+      real, intent(in)    :: Suvw(NFREQS, NPSDEL)
+      real, intent(in)    :: Suvw_pad(NPSDEL)
+      real, intent(inout) :: psd(dimM_psd_), bisp(dimM_bisp_)
 
       integer   :: itc, tc, tcP3, iposN, inode, n, imode, posNi
-      real(bsa_real_t) :: Suvw_i
+      real :: Suvw_i
 
-      real(bsa_real_t), dimension(NLIBSL, NMODES_EFF) :: phiN_
-      real(bsa_real_t), dimension(NLIBSL, NLIBSL) :: PSDF_jk_JJ_w, tmp3, phiIJ_
-      real(bsa_real_t), dimension(NLIBSL) :: aNU, aN
+      real, dimension(NLIBSL, NMODES_EFF) :: phiN_
+      real, dimension(NLIBSL, NLIBSL) :: PSDF_jk_JJ_w, tmp3, phiIJ_
+      real, dimension(NLIBSL) :: aNU, aN
 
 
-      psd  = 0._bsa_real_t
-      bisp = 0._bsa_real_t
+      psd  = 0.
+      bisp = 0.
 
 
       iposN = 1
@@ -2489,11 +2476,11 @@ use BsaLib_Data, only: iun_POD_trunc_, do_export_POD_info_
             if (settings%i_compute_bisp_ == 1) then
 
                block
-                  real(bsa_real_t) :: Suvw_j, Suvw_ij
+                  real :: Suvw_j, Suvw_ij
                   integer   :: ilk
 
-                  real(bsa_real_t) :: BF_ijk_III_wiwj(NLIBSL, NLIBSL)
-                  real(bsa_real_t), dimension(NLIBSL, NLIBSL) :: tmp2, tmp1
+                  real :: BF_ijk_III_wiwj(NLIBSL, NLIBSL)
+                  real, dimension(NLIBSL, NLIBSL) :: tmp2, tmp1
 
                   Suvw_j  = Suvw(ij, iposN)
                   Suvw_ij = Suvw_pad(iposN)
@@ -2541,16 +2528,16 @@ use BsaLib_Data, only: iun_POD_trunc_, do_export_POD_info_
 
 
    module subroutine getRM_diag_scalar_cls_(ii, ij, fi, fj, psdin, psdout, bispin, bispout)
-      integer(bsa_int_t), intent(in)  :: ii, ij  ! freqs indexes
-      real(bsa_real_t), intent(in)    :: fi, fj
-      real(bsa_real_t), intent(in)    :: psdin(dimM_psd_), bispin(dimM_bisp_)
-      real(bsa_real_t), intent(out)   :: psdout(dimM_psd_), bispout(dimM_bisp_)
+      integer, intent(in)  :: ii, ij  ! freqs indexes
+      real, intent(in)    :: fi, fj
+      real, intent(in)    :: psdin(dimM_psd_), bispin(dimM_bisp_)
+      real, intent(out)   :: psdout(dimM_psd_), bispout(dimM_bisp_)
 
-      real(bsa_real_t)   :: wi
-      integer(bsa_int_t) :: imi
+      real   :: wi
+      integer :: imi
 
-      real(bsa_real_t), dimension(NMODES_EFF) :: Cdiag, rpart, ipart, htmp
-      real(bsa_real_t), dimension(NMODES_EFF) :: H1r, H1i
+      real, dimension(NMODES_EFF) :: Cdiag, rpart, ipart, htmp
+      real, dimension(NMODES_EFF) :: H1r, H1i
 
 
       wi = fi * CST_PIt2
@@ -2573,10 +2560,10 @@ use BsaLib_Data, only: iun_POD_trunc_, do_export_POD_info_
 
 
       block
-         real(bsa_real_t) :: wj, wiPwj
-         real(bsa_real_t), dimension(NMODES_EFF) :: H2r, H2i
-         real(bsa_real_t), dimension(NMODES_EFF) :: H12r, H12i
-         real(bsa_real_t) :: H12k_r, H12k_i, H2j_r, H2j_i
+         real :: wj, wiPwj
+         real, dimension(NMODES_EFF) :: H2r, H2i
+         real, dimension(NMODES_EFF) :: H12r, H12i
+         real :: H12k_r, H12k_i, H2j_r, H2j_i
 
 
          wj    = fj * CST_PIt2
@@ -2623,15 +2610,15 @@ use BsaLib_Data, only: iun_POD_trunc_, do_export_POD_info_
    pure module subroutine getBR_SFm_val_(nm, Suvw, fnat, im, m, psd)
       !! BUG: very unoptimised..
       !!      is basically a small copy of "getFM_full_tnlm_scalar_cls_"
-      integer(bsa_int_t), intent(in)  :: im, m, nm
-      real(bsa_real_t), intent(in)    :: Suvw(nm, NPSDEL), fnat
-      real(bsa_real_t), intent(inout) :: psd
+      integer, intent(in)  :: im, m, nm
+      real, intent(in)    :: Suvw(nm, NPSDEL), fnat
+      real, intent(inout) :: psd
 
       ! turb components related
       integer :: itc, tc_posN, tc_pk, tc_pj
 
       ! freqs related
-      real(bsa_real_t) :: fiabs
+      real :: fiabs
 
       ! nodes indexed values
       integer :: i_pos_nk, i_pos_nj
@@ -2640,21 +2627,21 @@ use BsaLib_Data, only: iun_POD_trunc_, do_export_POD_info_
       integer :: nj, nk
 
       ! local nodal correlations
-      real(bsa_real_t) :: corrJK
+      real :: corrJK
 
       integer :: tc
-      real(bsa_real_t), dimension(NLIBSL, 1) :: akU, phij_
-      real(bsa_real_t), dimension(1, NLIBSL) :: ajU, phik_
+      real, dimension(NLIBSL, 1) :: akU, phij_
+      real, dimension(1, NLIBSL) :: ajU, phik_
 
       ! PSDs local
-      real(bsa_real_t) :: S_uvw_j_i
-      real(bsa_real_t) :: S_uvw_k_i
-      real(bsa_real_t) :: S_uvw_JK_i
+      real :: S_uvw_j_i
+      real :: S_uvw_k_i
+      real :: S_uvw_JK_i
 
-      real(bsa_real_t), dimension(NLIBSL, NLIBSL) :: PSD_jk_JK_w
+      real, dimension(NLIBSL, NLIBSL) :: PSD_jk_JK_w
       !========================================================================
 
-      psd   = 0._bsa_real_t
+      psd   = 0.
       fiabs = abs(fnat)
 
 

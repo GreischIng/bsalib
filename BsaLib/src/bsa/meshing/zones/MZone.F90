@@ -15,7 +15,6 @@
 !! along with BsaLib.  If not, see <https://www.gnu.org/licenses/>.
 module BsaLib_MZone
 
-   use BsaLib_CONSTANTS, only: bsa_int_t, bsa_real_t, int32
    use BsaLib_Data,      only: bsa_Abort, test_no_bfm_mlr_
    use BsaLib_IO,        only: io_units_bfmdump
    use BsaLib_MPolicy,   only: MPolicy_t, MPolicy_NULL, assignment(=), operator(==)
@@ -41,7 +40,7 @@ module BsaLib_MZone
       type(MPolicy_t)     :: policy_
 
       !> Pointer to index of zone's interest modes
-      integer(bsa_int_t), public :: id_im_
+      integer, public :: id_im_
 
    contains
       procedure, pass :: zoneName
@@ -79,10 +78,10 @@ module BsaLib_MZone
          & , bfm &
 #endif
          &, pdata)
-         import :: MZone_t, bsa_real_t
+         import :: MZone_t
          class(MZone_t), intent(inout) :: this
 #ifndef BSA_USE_POD_DATA_CACHING
-         real(bsa_real_t), intent(in)  :: bfm(:, :)
+         real, intent(in)  :: bfm(:, :)
 #endif
          class(*), pointer, intent(in) :: pdata
       end subroutine
@@ -116,7 +115,7 @@ contains
 
    subroutine setInterestModeIndexPtr(this, id)
       class(MZone_t), intent(inout)  :: this
-      integer(bsa_int_t), intent(in) :: id
+      integer, intent(in) :: id
 
       this%id_im_ = id
    end subroutine
@@ -154,7 +153,7 @@ contains
    )
       class(MZone_t), intent(in)   :: z
 #ifndef BSA_USE_POD_DATA_CACHING
-      real(bsa_real_t), intent(in) :: data(:, :)
+      real, intent(in) :: data(:, :)
 #endif
 
       ! dump specific zone data
@@ -194,7 +193,7 @@ contains
 # define __decl__
 #else
 # define __bfm_dump__  ,bfm_undump
-# define __decl__ real(bsa_real_t), allocatable, intent(inout) :: bfm_undump(:, :)
+# define __decl__ real, allocatable, intent(inout) :: bfm_undump(:, :)
 #endif
    subroutine UndumpZone(z  __bfm_dump__ )
 #ifndef BSA_USE_POD_DATA_CACHING

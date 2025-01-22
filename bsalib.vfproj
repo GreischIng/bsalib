@@ -16,7 +16,7 @@
 			<Tool Name="VFPostBuildEventTool"/>
 		</Configuration>
 		<Configuration Name="Debug|x64" OutputDirectory="$(PlatformName)" IntermediateDirectory=".\$(Platform)" ConfigurationType="typeStaticLibrary">
-			<Tool Name="VFFortranCompilerTool" SuppressStartupBanner="true" Optimization="optimizeFull" InlineFunctionExpansion="expandOnlyInline" Preprocess="preprocessYes" AdditionalIncludeDirectories=".\src\CONSTANTS;" PreprocessorDefinitions="BSA_USE_SVD_METHOD;INT64" OpenMP="OpenMPParallelCode" WarnInterfaces="true" IntegerKIND="integerKIND8" RealKIND="realKIND8" RuntimeLibrary="rtMultiThreadedDebugDLL"/>
+			<Tool Name="VFFortranCompilerTool" SuppressStartupBanner="true" Optimization="optimizeFull" InlineFunctionExpansion="expandOnlyInline" Preprocess="preprocessYes" AdditionalIncludeDirectories=".\src\CONSTANTS;" PreprocessorDefinitions="BSA_USE_SVD_METHOD" OpenMP="OpenMPParallelCode" FPS4General="true" IntegerKIND="integerKIND8" RealKIND="realKIND8" Traceback="true" RuntimeLibrary="rtMultiThreadedDebugDLL"/>
 			<Tool Name="VFLibrarianTool"/>
 			<Tool Name="VFResourceCompilerTool"/>
 			<Tool Name="VFMidlTool" SuppressStartupBanner="true" TargetEnvironment="midlTargetAMD64"/>

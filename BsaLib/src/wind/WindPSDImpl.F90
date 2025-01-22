@@ -35,7 +35,7 @@ contains
 
    module subroutine SetPSDType(this, ipsd)
       class(WindData_t), intent(inout) :: this
-      integer(bsa_int_t), value :: ipsd
+      integer, value :: ipsd
       integer :: istat
       character(len = 256) :: emsg
 
@@ -77,26 +77,17 @@ contains
       use BsaLib_Utility,  only: util_getCorrVectIndex
       use BsaLib_Data,     only: struct_data
       class(WindData_t),  intent(in) :: this
-      integer(bsa_int_t), intent(in) :: innl, idir
-      integer(bsa_int_t), intent(in) :: nodesl(innl)
-      real(bsa_real_t),   intent(in) :: PSDvec(innl)
-      real(bsa_real_t),   intent(in) :: f
-      real(bsa_real_t) :: PSDmat(innl, innl)
-      real(bsa_real_t) :: absf
+      integer, intent(in) :: innl, idir
+      integer, intent(in) :: nodesl(innl)
+      real,   intent(in) :: PSDvec(innl)
+      real,   intent(in) :: f
+      real :: PSDmat(innl, innl)
+      real :: absf
       integer   :: i, j, ni, nj, id
 
       absf = abs(f)
 
-#ifdef __use_concurrent_loops__
-# ifdef __GFORTRAN__
-      do concurrent (i = 1 : innl)
-# else
-      do concurrent (i = 1 : innl) &
-            local(ni, nj, id) shared(PSDvec, nodesl, innl, struct_data, this, absf)
-# endif
-#else
       do i = 1, innl
-#endif
          PSDmat(:, i) = sqrt(PSDvec * PSDvec(i))
          ni = nodesl(i)
          do j = 1, innl
@@ -123,10 +114,10 @@ contains
    module function evalPSD_(this, nf, f, innl, nnl, idir, itc) result(PSD)
       use BsaLib_Data, only: settings
       class(WindData_t),  intent(in) :: this
-      integer(bsa_int_t), intent(in) :: nf, innl, idir, itc
-      real(bsa_real_t),   intent(in) :: f(:)
-      integer(bsa_int_t), intent(in) :: nnl(:)
-      real(bsa_real_t) :: PSD(nf, innl)
+      integer, intent(in) :: nf, innl, idir, itc
+      real,   intent(in) :: f(:)
+      integer, intent(in) :: nnl(:)
+      real :: PSD(nf, innl)
 
       if (idir /= 1) then
          print '(/ 1x, 2a, i1, a)', &
@@ -148,16 +139,16 @@ contains
 
    function vonKarmanPSD_(wd, nf, freqs, innl, nnl, idir, itc) result(PSD)
       class(WindData_t),  intent(in) :: wd
-      integer(bsa_int_t), intent(in) :: nf       ! n. frequencies
-      integer(bsa_int_t), intent(in) :: innl     ! n. actual nodes loaded
-      integer(bsa_int_t), intent(in) :: idir     ! wind direction
-      integer(bsa_int_t), intent(in) :: itc      ! turb. component id
-      real(bsa_real_t),   intent(in) :: freqs(:) ! frequencies
-      integer(bsa_int_t), intent(in) :: nnl(:)   ! list of actual loaded nodes
-      real(bsa_real_t) :: PSD(nf, innl)
+      integer, intent(in) :: nf       ! n. frequencies
+      integer, intent(in) :: innl     ! n. actual nodes loaded
+      integer, intent(in) :: idir     ! wind direction
+      integer, intent(in) :: itc      ! turb. component id
+      real,   intent(in) :: freqs(:) ! frequencies
+      integer, intent(in) :: nnl(:)   ! list of actual loaded nodes
+      real :: PSD(nf, innl)
       ! local
-      real(bsa_real_t), dimension(1, innl) :: L
-      real(bsa_real_t), allocatable :: rtmp1(:, :)
+      real, dimension(1, innl) :: L
+      real, allocatable :: rtmp1(:, :)
       integer :: i
 
 
@@ -172,27 +163,19 @@ contains
          PSD   = matmul(reshape(abs(freqs), [nf, 1]), rtmp1)
          PSD   = PSD * PSD ! square
          rtmp1 = rtmp1 * reshape(wd%sigmaUVW_wz_(itc, wd%wz_node_(nnl))**2, [1, innl])
-         PSD   = (1 + 70.7_bsa_real_t * PSD)**(5._bsa_real_t/6._bsa_real_t)
+         PSD   = (1 + 70.7 * PSD)**(5./6.)
 
 
-#ifdef __use_concurrent_loops__
-# ifdef __GFORTRAN__
-         do concurrent (i = 1 : innl)
-# else
-         do concurrent (i = 1 : innl) shared(innl, rtmp1)
-# endif
-#else
          do i = 1, innl
-#endif
-            PSD(:, i) = 4._bsa_real_t * rtmp1(1, i) / PSD(:, i)
+            PSD(:, i) = 4. * rtmp1(1, i) / PSD(:, i)
          enddo
 
       else
 
          block
-            real(bsa_real_t) :: dnlsu(nf, innl), rtmp2(nf, innl), rtmp3(nf, innl)
+            real :: dnlsu(nf, innl), rtmp2(nf, innl), rtmp3(nf, innl)
 
-            dnlsu = 2._bsa_real_t * &
+            dnlsu = 2. * &
                matmul(reshape(freqs, [nf, 1]), &
                   reshape(wd%turb_scales_wz_(itc, idir, wd%wz_node_(nnl)), [1, innl]) / &
                   reshape(wd%u_node_(nnl), [1, innl]) &
@@ -200,21 +183,12 @@ contains
 
             dnlsu = dnlsu*dnlsu
 
-            rtmp1 = 1._bsa_real_t + 70.7_bsa_real_t * dnlsu
-            rtmp2 = rtmp1 ** (11._bsa_real_t / 6._bsa_real_t)
-#ifdef __use_concurrent_loops__
-# ifdef __GFORTRAN__
-         do concurrent (i = 1 : innl)
-# else
-         do concurrent (i = 1 : innl) &
-            shared(innl, rtmp2, rtmp3, wd, nnl, itc, idir, dnlsu)
-# endif
-#else
+            rtmp1 = 1. + 70.7 * dnlsu
+            rtmp2 = rtmp1 ** (11. / 6.)
             do i = 1, innl
-#endif
                rtmp2(:, i) = rtmp2(:, i) * wd%u_node_(nnl(i))
                rtmp3(:, i) = wd%turb_scales_wz_(itc, idir, wd%wz_node_(nnl(i))) * &
-                  (1._bsa_real_t + 188.4_bsa_real_t * dnlsu(:, i)) / &
+                  (1. + 188.4 * dnlsu(:, i)) / &
                   rtmp2(:, i) * wd%sigmaUVW_wz_(itc, wd%wz_node_(nnl(i)))**2
             enddo
             rtmp1 = rtmp3 + rtmp3
@@ -230,16 +204,16 @@ contains
 
    function kaimalPSD_(wd, nf, freqs, innl, nnl, idir, itc) result(PSD)
       class(WindData_t),  intent(in) :: wd
-      integer(bsa_int_t), intent(in) :: nf            ! n. frequencies
-      integer(bsa_int_t), intent(in) :: innl          ! n. actual nodes loaded
-      integer(bsa_int_t), intent(in) :: idir          ! wind direction
-      integer(bsa_int_t), intent(in) :: itc           ! 
-      integer(bsa_int_t), intent(in) :: nnl(:)     ! list of actual loaded nodes
-      real(bsa_real_t),   intent(in) :: freqs(:)     ! frequencies
-      real(bsa_real_t) :: PSD(nf, innl)
+      integer, intent(in) :: nf            ! n. frequencies
+      integer, intent(in) :: innl          ! n. actual nodes loaded
+      integer, intent(in) :: idir          ! wind direction
+      integer, intent(in) :: itc           ! 
+      integer, intent(in) :: nnl(:)     ! list of actual loaded nodes
+      real,   intent(in) :: freqs(:)     ! frequencies
+      real :: PSD(nf, innl)
 
 
-      PSD = 0._bsa_real_t
+      PSD = 0.
    end function kaimalPSD_
 
 
@@ -248,31 +222,22 @@ contains
 
    function davenportPSD_Greisch_(wd, nf, freqs, innl, nnl, idir, itc) result(PSD)
       class(WindData_t),  intent(in) :: wd
-      integer(bsa_int_t), intent(in) :: nf          ! n. frequencies
-      integer(bsa_int_t), intent(in) :: innl        ! n. actual nodes loaded
-      integer(bsa_int_t), intent(in) :: idir        ! wind direction
-      integer(bsa_int_t), intent(in) :: itc         ! 
-      integer(bsa_int_t), intent(in) :: nnl(:)   ! list of actual loaded nodes
-      real(bsa_real_t),   intent(in) :: freqs(:)   ! frequencies
-      real(bsa_real_t) :: PSD(nf, innl)
+      integer, intent(in) :: nf          ! n. frequencies
+      integer, intent(in) :: innl        ! n. actual nodes loaded
+      integer, intent(in) :: idir        ! wind direction
+      integer, intent(in) :: itc         ! 
+      integer, intent(in) :: nnl(:)   ! list of actual loaded nodes
+      real,   intent(in) :: freqs(:)   ! frequencies
+      real :: PSD(nf, innl)
 
-      real(bsa_real_t), parameter :: cst1 = 0.65_bsa_real_t * 1200._bsa_real_t
+      real, parameter :: cst1 = 0.65 * 1200.
       integer   :: i, n
 
-#ifdef __use_concurrent_loops__
-# ifdef __GFORTRAN__
-      do concurrent (i = 1 : innl)
-# else
-      do concurrent (i = 1 : innl) &
-         shared(innl, nnl, wd, freqs, itc) local(n)
-# endif
-#else
       do i = 1, innl
-#endif
          n         = nnl(i)
          PSD(:, i) = &
             cst1 * (wd%sigmaUVW_wz_(itc, wd%wz_node_(n)))**2 / wd%u_mean_ref_wz_(wd%wz_node_(n)) / &
-            (1 + (cst1 * freqs / wd%u_mean_ref_wz_(wd%wz_node_(n)))**2._bsa_real_t)**(5._bsa_real_t / 6._bsa_real_t)
+            (1 + (cst1 * freqs / wd%u_mean_ref_wz_(wd%wz_node_(n)))**2.)**(5. / 6.)
       enddo
    end function davenportPSD_Greisch_
 
@@ -282,31 +247,22 @@ contains
 
    function davenportPSD_Uliege_(wd, nf, freqs, innl, nnl, idir, itc) result(PSD)
       class(WindData_t),  intent(in) :: wd
-      integer(bsa_int_t), intent(in) :: nf                    ! n. frequencies
-      integer(bsa_int_t), intent(in) :: innl                  ! n. actual nodes loaded
-      integer(bsa_int_t), intent(in) :: idir                  ! wind direction
-      integer(bsa_int_t), intent(in) :: itc                   ! 
-      integer(bsa_int_t), intent(in) :: nnl(:)     ! list of actual loaded nodes
-      real(bsa_real_t),   intent(in) :: freqs(:)   ! frequencies
-      real(bsa_real_t) :: PSD(nf, innl)
+      integer, intent(in) :: nf                    ! n. frequencies
+      integer, intent(in) :: innl                  ! n. actual nodes loaded
+      integer, intent(in) :: idir                  ! wind direction
+      integer, intent(in) :: itc                   ! 
+      integer, intent(in) :: nnl(:)     ! list of actual loaded nodes
+      real,   intent(in) :: freqs(:)   ! frequencies
+      real :: PSD(nf, innl)
 
-      real(bsa_real_t) :: cstL_U(1, innl), cstFL_U(nf, innl)
+      real :: cstL_U(1, innl), cstFL_U(nf, innl)
       integer   :: i, n
 
 
       cstL_U(1, :) = wd%turb_scales_wz_(itc, idir, wd%wz_node_(nnl)) / wd%u_node_(nnl)
       cstFL_U      = matmul(reshape(abs(freqs), [nf, 1]), cstL_U)
 
-#ifdef __use_concurrent_loops__
-# ifdef __GFORTRAN__
-      do concurrent (i = 1 : innl)
-# else
-      do concurrent (i = 1 : innl) &
-            shared(cstFL_U, innl, nnl, cstL_U, itc, wd) local(n)
-# endif
-#else
       do i = 1, innl
-#endif
          n = nnl(i)
 
          PSD(:, i) = &

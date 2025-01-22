@@ -38,11 +38,11 @@ contains
    !> BUG: now only supports EVENLY SPACED FREQUENCIES..
    module subroutine mainClassic_(m2mf_cls, m2mr_cls, m2o2mr_cls, m3mf_cls, m3mr_cls)
       use BsaLib_Functions
-      real(bsa_real_t), allocatable, intent(inout), target :: &
+      real, allocatable, intent(inout), target :: &
          m2mf_cls(:), m2mr_cls(:), m2o2mr_cls(:), m3mf_cls(:), m3mr_cls(:)
 
       ! local
-      real(bsa_real_t), allocatable :: f(:)
+      real, allocatable :: f(:)
       ! =============================================================================
 
 
@@ -54,20 +54,20 @@ contains
 
       if (settings%i_compute_psd_ == 1) then
          allocate(m2mf_cls(dimM_psd_))
-         m2mf_cls = 0._bsa_real_t
+         m2mf_cls = 0.
 
          allocate(m2mr_cls(dimM_psd_))
-         m2mr_cls = 0._bsa_real_t
+         m2mr_cls = 0.
 
          allocate(m2o2mr_cls(dimM_psd_))
-         m2o2mr_cls = 0._bsa_real_t
+         m2o2mr_cls = 0.
       endif
       if (settings%i_compute_bisp_== 1) then
          allocate(m3mf_cls(dimM_bisp_))
-         m3mf_cls = 0._bsa_real_t
+         m3mf_cls = 0.
 
          allocate(m3mr_cls(dimM_bisp_))
-         m3mr_cls = 0._bsa_real_t
+         m3mr_cls = 0.
       endif
 
 
@@ -89,7 +89,7 @@ contains
 #endif
 
          block
-            real(bsa_real_t), allocatable :: S_uvw(:, :)
+            real, allocatable :: S_uvw(:, :)
             integer :: itc_, idir_, idxi, idxe, idim2, i
 
 #ifdef BSA_DEBUG
@@ -124,7 +124,7 @@ contains
 #endif
 
             block
-               real(bsa_real_t) :: m2(idim2)
+               real :: m2(idim2)
 
                call intgSpectraVect_(settings%nfreqs_, f, psd=S_uvw, m2=m2)
                call bsa_exportMomentToFile('m2_PSDs.txt', m2)
@@ -141,7 +141,7 @@ contains
                block
                   use BsaLib_MZone, only: MZone_ID
                   integer :: j
-                  real(bsa_real_t), allocatable :: psd(:, :), bisp(:, :, :)
+                  real, allocatable :: psd(:, :), bisp(:, :, :)
                   class(*), pointer :: export_data_base_ptr_ => null()
 
                   call getBFM_vect_cls(f, S_uvw, psd, bisp)
@@ -170,7 +170,7 @@ contains
 
                      block
                         integer :: k
-                        real(bsa_real_t) :: b_temp(dimM_bisp_, 1)
+                        real :: b_temp(dimM_bisp_, 1)
 
 
                         ! BUG: too many memcpy !!
@@ -195,14 +195,10 @@ contains
                   endif
 
                   block
-                     real(bsa_real_t), allocatable :: omegas(:)
+                     real, allocatable :: omegas(:)
 
                      omegas = f * CST_PIt2
-# ifdef __GFORTRAN__
-                     do concurrent (i = 1 : dimM_psd_)
-# else
-                     do concurrent (i = 1 : dimM_psd_) shared(omegas, psd)
-# endif
+                     do i = 1 , dimM_psd_
                         psd(:, i) = psd(:, i) * omegas(:) * omegas(:)
                      enddo
                      if (allocated(omegas)) deallocate(omegas)
@@ -211,11 +207,11 @@ contains
 
 #  if 0
                   block
-                     real(bsa_real_t), allocatable :: psd_r(:, :)
+                     real, allocatable :: psd_r(:, :)
                      integer :: im, jm, idx
 
                      allocate(psd_r(settings%nfreqs_, dimNr_psd_))
-                     psd_r = 0._bsa_real_t
+                     psd_r = 0.
 
                      idx = 0
                      do jm = 1, struct_data%modal_%nm_eff_
@@ -262,8 +258,8 @@ contains
                   WARNMSG, 'For scalar version, computation of m2o2_mr not yet implemented !'
 
                block
-                  real(bsa_real_t) :: fi, fj, dw, dw2, omg
-                  real(bsa_real_t), allocatable :: S_uvw_pad(:, :)
+                  real :: fi, fj, dw, dw2, omg
+                  real, allocatable :: S_uvw_pad(:, :)
 
                   integer, pointer :: jfr_ext => null()
                   integer, target  :: one_ext = 1
@@ -273,13 +269,13 @@ contains
                   integer :: nt  !! n. of threads
 #endif
 
-                  real(bsa_real_t), target, dimension(dimM_psd_)  :: psdfm, psdrm, r_tmp
-                  real(bsa_real_t), target, dimension(dimM_bisp_) :: bispfm, bisprm
+                  real, target, dimension(dimM_psd_)  :: psdfm, psdrm, r_tmp
+                  real, target, dimension(dimM_bisp_) :: bispfm, bisprm
 
-                  psdfm  = 0._bsa_real_t
-                  psdrm  = 0._bsa_real_t
-                  bispfm = 0._bsa_real_t
-                  bisprm = 0._bsa_real_t
+                  psdfm  = 0.
+                  psdrm  = 0.
+                  bispfm = 0.
+                  bisprm = 0.
 
                   dw  = (f(2) - f(1)) * CST_PIt2 ! [rad/s]
                   dw2 = dw*dw
@@ -444,13 +440,13 @@ contains
       ! class(bsa_classic_t), intent(inout)   :: this
       class(settings_t), intent(inout)      :: setts
       class(StructureData_t), intent(inout) :: struct
-      real(bsa_real_t), allocatable, intent(out) :: f(:)
+      real, allocatable, intent(out) :: f(:)
 
       logical :: l_df_big = .false.
       integer   :: i, nfreqs_0, nfreqs_1
-      real(bsa_real_t) :: df_ref, max_freq, max_freq_ref
+      real :: df_ref, max_freq, max_freq_ref
 
-      if (setts%nfreqs_ == 0 .or. setts%df_ == 0._bsa_real_t) &
+      if (setts%nfreqs_ == 0 .or. setts%df_ == 0.) &
          call bsa_Abort('Either NFREQs or DF are == 0.')
 
 
@@ -565,20 +561,20 @@ contains
 
 
    subroutine intgSpectraVect_(nf, f, psd, m2, bisp, m3)
-      integer(bsa_int_t), intent(in) :: nf
-      real(bsa_real_t), intent(in)   :: f(nf)
+      integer, intent(in) :: nf
+      real, intent(in)   :: f(nf)
       ! integer, intent(in), optional   :: dimpsd, dimbisp
-      real(bsa_real_t), intent(in), optional  :: psd(nf, *), bisp(nf, nf, *)
-      real(bsa_real_t), intent(out), optional :: m2(:), m3(:)
+      real, intent(in), optional  :: psd(nf, *), bisp(nf, nf, *)
+      real, intent(out), optional :: m2(:), m3(:)
 
       integer   :: nf_1 = 0, dim = 0, i
-      real(bsa_real_t) :: delta
-      real(bsa_real_t) :: rtmp, d_2, d2, d2_2
+      real :: delta
+      real :: rtmp, d_2, d2, d2_2
 
 
       delta = f(2) - f(1)
       if (settings%i_def_scaling_ == 1) delta = delta * CST_PIt2  ! [rad/s]
-      d_2  = delta / 2._bsa_real_t
+      d_2  = delta / 2.
 
       !  PSDs
       if (present(psd) .and. present(m2)) then
@@ -605,7 +601,7 @@ contains
          ! removing excess from vertexes/borders
 
          rtmp = CST_3d2 * d2
-         d2_2 = d2 / 2._bsa_real_t
+         d2_2 = d2 / 2.
          nf_1 = nf - 1
 
          ! LEFT

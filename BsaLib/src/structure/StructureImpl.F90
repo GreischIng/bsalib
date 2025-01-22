@@ -26,8 +26,8 @@ contains
 
    module subroutine SetNodalCoords(this, nn, coords)
       class(StructureData_t), intent(inout) :: this
-      integer(bsa_int_t), intent(in)        :: nn
-      real(bsa_real_t), target, contiguous  :: coords(:, :)
+      integer, intent(in)        :: nn
+      real, target, contiguous  :: coords(:, :)
 
       if (this%nn_ == 0) then
          this%nn_ = nn
@@ -46,7 +46,7 @@ contains
 
    module subroutine SetNOfNodalDOFs(this, nlibs)
       class(StructureData_t), intent(inout) :: this
-      integer(bsa_int_t), intent(in)        :: nlibs
+      integer, intent(in)        :: nlibs
 
       this%nlibs_ = nlibs
    end subroutine SetNOfNodalDOFs
@@ -58,7 +58,7 @@ contains
 
    module subroutine SetTotalNOfNodes(this, nn)
       class(StructureData_t), intent(inout) :: this
-      integer(bsa_int_t), intent(in)        :: nn
+      integer, intent(in)        :: nn
 
       this%nn_ = nn
    end subroutine SetTotalNOfNodes
@@ -68,8 +68,8 @@ contains
 
    module subroutine SetLoadedNodalDOFs(this, nlib, lib)
       class(StructureData_t), intent(inout) :: this
-      integer(bsa_int_t), intent(in) :: nlib
-      integer(bsa_int_t), target, intent(in) :: lib(:)
+      integer, intent(in) :: nlib
+      integer, target, intent(in) :: lib(:)
 
 
       this%nlibs_load_ = nlib
@@ -82,8 +82,8 @@ contains
 
    module subroutine SetLoadedNodes(this, nnl, nl)
       class(StructureData_t), intent(inout) :: this
-      integer(bsa_int_t), intent(in) :: nnl
-      integer(bsa_int_t), target, intent(in) :: nl(:)
+      integer, intent(in) :: nnl
+      integer, target, intent(in) :: nl(:)
 
       this%nn_load_ = nnl
       this%n_load_  => nl
@@ -95,8 +95,8 @@ contains
 
    module subroutine SetModalInfo(this, ndofs, nm, Phi, natf)
       class(StructureData_t), intent(inout) :: this
-      integer(bsa_int_t), intent(in) :: ndofs, nm
-      real(bsa_real_t), intent(in), target :: Phi(ndofs, nm), natf(nm)
+      integer, intent(in) :: ndofs, nm
+      real, intent(in), target :: Phi(ndofs, nm), natf(nm)
 
       this%ndofs_     = ndofs
       this%modal_%nm_ = nm
@@ -110,7 +110,7 @@ contains
 
    module subroutine SetKeptModes(this, modes)
       class(StructureData_t), intent(inout) :: this
-      integer(bsa_int_t), intent(in) :: modes(:)
+      integer, intent(in) :: modes(:)
       integer :: istat, nmodes
       character(len = 256) :: emsg
 
@@ -145,7 +145,7 @@ contains
          if (istat /= 0) call allocKOMsg('this % modal_%modes_', istat, emsg)
       endif
 
-      do concurrent (istat = 1 : this%modal_%nm_)
+      do istat = 1 , this%modal_%nm_
          this%modal_%modes_(istat) = istat
       enddo
    end subroutine SetKeptModesDefault
@@ -156,9 +156,9 @@ contains
 
    module subroutine SetModalMatrices(this, nm, Mg, Kg, Cg)
       class(StructureData_t), intent(inout) :: this
-      integer(bsa_int_t), intent(in) :: nm
-      real(bsa_real_t), intent(in), target :: Mg(nm), Kg(nm)
-      real(bsa_real_t), intent(in), target :: Cg(nm, nm)
+      integer, intent(in) :: nm
+      real, intent(in), target :: Mg(nm), Kg(nm)
+      real, intent(in), target :: Cg(nm, nm)
 
       if (.not. this%modal_%nm_ == 0) then
          if (.not. this%modal_%nm_ == nm) &
@@ -179,7 +179,7 @@ contains
 
    module subroutine SetTotDamping(this, xsi)
       class(StructureData_t), intent(inout) :: this
-      real(bsa_real_t), target, intent(in) :: xsi(this%modal_%nm_)
+      real, target, intent(in) :: xsi(this%modal_%nm_)
 
       this%modal_%xsi_ => xsi
    end subroutine
@@ -195,7 +195,7 @@ contains
 
       if (allocated(this%res_peak_width_)) then
 
-         if (.not. all(this%res_peak_width_ == 0._bsa_real_t)) return
+         if (.not. all(this%res_peak_width_ == 0.)) return
       else
 
          allocate(this%res_peak_width_(this%modal_%nm_), stat=istat, errmsg=emsg)
@@ -217,7 +217,7 @@ contains
 
    module subroutine computeBKGPeakWidths(this, wind_scales)
       class(StructureData_t), intent(inout) :: this
-      real(bsa_real_t), intent(in) :: wind_scales(:, :)
+      real, intent(in) :: wind_scales(:, :)
       integer   :: j, i
       integer :: istat
       character(len = 256) :: emsg
@@ -228,20 +228,22 @@ contains
          if (istat /= 0) call allocKOMsg('this % bkg_peak_width_', istat, emsg)
       endif
 
-      this%bkg_peak_width_ = 0._bsa_real_t
+      this%bkg_peak_width_ = 0.
 
 #ifdef BSA_DEBUG
       do j = 1, 3
          do i = 1, 3
-            if (wind_scales(i, j) == 0._bsa_real_t) cycle
-            this%bkg_peak_width_(i, j) = 1._bsa_real_t / wind_scales(i, j)
+            if (wind_scales(i, j) == 0.) cycle
+            this%bkg_peak_width_(i, j) = 1. / wind_scales(i, j)
          enddo
       enddo
 #else
-      do concurrent (j = 1:3, i = 1:3)
-         if (.not. wind_scales(i, j) == 0._bsa_real_t) then
-            this%bkg_peak_width_(i, j) = 1._bsa_real_t / wind_scales(i, j)
-         endif
+      do j = 1,3
+         do i = 1, 3
+            if (.not. wind_scales(i, j) == 0.) then
+               this%bkg_peak_width_(i, j) = 1. / wind_scales(i, j)
+            endif
+         enddo
       enddo
 #endif
 

@@ -26,7 +26,7 @@ contains
 
    module subroutine SetSubanType(this, isuban)
       class(settings_t), intent(inout) :: this
-      integer(bsa_int_t), intent(in)   :: isuban
+      integer, intent(in)   :: isuban
 
       if (isuban < 0 .or. isuban > 3) call bsa_Abort('Invalid "sub-an" value.')
       this%i_suban_type_ = isuban
@@ -35,7 +35,7 @@ contains
 
    module subroutine SetVersion(this, ivers)
       class(settings_t), intent(inout) :: this
-      integer(bsa_int_t), intent(in)   :: ivers
+      integer, intent(in)   :: ivers
 
       if (ivers < 0 .or. ivers > 2) call bsa_Abort('Invalid "ivers" value.')
       this%i_vers_ = ivers
@@ -44,7 +44,7 @@ contains
 
    module subroutine SetScalingType(this, idefsc)
       class(settings_t), intent(inout) :: this
-      integer(bsa_int_t), intent(in)   :: idefsc
+      integer, intent(in)   :: idefsc
 
       if (idefsc < 0 .or. idefsc > 2) call bsa_Abort('Invalid "idefsc" value.')
       this%i_def_scaling_ = idefsc
@@ -53,7 +53,7 @@ contains
 
    module subroutine ActivateSpectraComputation(this, ipsd, ibisp)
       class(settings_t), intent(inout) :: this
-      integer(bsa_int_t), value :: ipsd, ibisp
+      integer, value :: ipsd, ibisp
 
       if (ipsd < 0 .or. ipsd > 1) then
          print '(1x, 2a)', WARNMSG, "Invalid  ipsd  value. Set to DEFAULT (1)"
@@ -72,7 +72,7 @@ contains
 
    module subroutine SetExtension(this, ionlydiag)
       class(settings_t), intent(inout) :: this
-      integer(bsa_int_t), intent(in)   :: ionlydiag
+      integer, intent(in)   :: ionlydiag
 
       if (ionlydiag < 0 .or. ionlydiag > 1) call bsa_Abort('Invalid "ionlydiag" value.')
       this%i_only_diag_ = ionlydiag
@@ -82,7 +82,7 @@ contains
 
    module subroutine TestMode(this, itest)
       class(settings_t), intent(inout) :: this
-      integer(bsa_int_t), intent(in)   :: itest
+      integer, intent(in)   :: itest
 
       if (itest < 0 .or. itest > 1) call bsa_Abort('Invalid "itest" value.')
       this%i_test_mode_ = itest
@@ -92,13 +92,13 @@ contains
 
    module subroutine setClsSettings(this, nfreqs, df)
       class(settings_t), intent(inout) :: this
-      integer(bsa_int_t), intent(in)   :: nfreqs
-      real(bsa_real_t), intent(in) :: df
+      integer, intent(in)   :: nfreqs
+      real, intent(in) :: df
 
       if (nfreqs <= 0) call bsa_Abort('Invalid "nfreqs" value.')
       this%nfreqs_ = nfreqs
 
-      if (df <= 0._bsa_real_t) call bsa_Abort('Invalid "df" value.')
+      if (df <= 0.) call bsa_Abort('Invalid "df" value.')
       this%df_ = df
    end subroutine
 
@@ -106,8 +106,8 @@ contains
 
    module subroutine SetMshrSetts(this, isvd, bkgrfmt, bkgaext, genpaext, maxaext, ifcov, idumpmod)
       class(settings_t), intent(inout) :: this
-      integer(bsa_int_t), value :: isvd, bkgrfmt, ifcov, idumpmod
-      real(bsa_real_t),   value :: bkgaext, genpaext, maxaext
+      integer, value :: isvd, bkgrfmt, ifcov, idumpmod
+      real,   value :: bkgaext, genpaext, maxaext
 
       this%i_use_svd_       = isvd
       this%bkg_base_rfmnt_  = bkgrfmt

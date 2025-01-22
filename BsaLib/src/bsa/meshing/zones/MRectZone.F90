@@ -15,7 +15,6 @@
 !! along with BsaLib.  If not, see <https://www.gnu.org/licenses/>.
 module BsaLib_MRectZone
 
-   use BsaLib_CONSTANTS,    only: bsa_real_t
    use BsaLib_MPoint,       only: MPoint_t
    use BsaLib_M2DPolygZone, only: M2DPolygZone_t
    implicit none (type, external)
@@ -30,16 +29,16 @@ module BsaLib_MRectZone
       type(MPoint_t) :: Ept_
 
       !> Rect base along I-dir (x axis)
-      real(bsa_real_t) :: base_I_ = 0._bsa_real_t
+      real :: base_I_ = 0.
 
       !> Rect base along J-dir (y axis)
-      real(bsa_real_t) :: base_J_ = 0._bsa_real_t
+      real :: base_J_ = 0.
 
       !> Delta freq [Hz] along I-dir (x axis)
-      real(bsa_real_t) :: deltaf_I_ = 0._bsa_real_t
+      real :: deltaf_I_ = 0.
 
       !> Delta freq [Hz] along J-dir (y axis)
-      real(bsa_real_t) :: deltaf_J_ = 0._bsa_real_t
+      real :: deltaf_J_ = 0.
 
 
       logical, private :: refmts_set_ = .false.
@@ -86,7 +85,7 @@ module BsaLib_MRectZone
    interface
       
       module function MRectZone_t_custom_constructor(rot, name) result(this)
-         real(bsa_real_t), intent(in), optional :: rot
+         real, intent(in), optional :: rot
          character(len=*), intent(in), optional :: name
          ! NOTE: compiler uses default initialisation here (built-in)
          type(MRectZone_t) :: this
@@ -96,14 +95,14 @@ module BsaLib_MRectZone
       !> Gets rect base along I-dir
       elemental module function baseI_rct(this) result(res)
          class(MRectZone_t), intent(in) :: this
-         real(bsa_real_t) :: res
+         real :: res
       end function
 
 
       !> Gets rect base along J-dir
       elemental module function baseJ_rct(this) result(res)
          class(MRectZone_t), intent(in) :: this
-         real(bsa_real_t) :: res
+         real :: res
       end function
 
 
@@ -135,7 +134,7 @@ module BsaLib_MRectZone
       !> Set frequency deltas
       module subroutine setDeltas(this, dfi, dfj, adapt)
          class(MRectZone_t), intent(inout) :: this
-         real(bsa_real_t), intent(in)             :: dfi, dfj
+         real, intent(in)             :: dfi, dfj
          logical, intent(in), optional     :: adapt
       end subroutine
 
@@ -164,7 +163,7 @@ module BsaLib_MRectZone
          character(len=1) :: loc
 
          !> Delta values
-         real(bsa_real_t), intent(in) :: dfi, dfj
+         real, intent(in) :: dfi, dfj
 
          !> Refinements
          integer, value :: ni, nj
@@ -191,10 +190,10 @@ module BsaLib_MRectZone
          character(len=1), intent(in) :: loc
 
          !> Delta values
-         real(bsa_real_t), value :: dfi, dfj
+         real, value :: dfi, dfj
 
          !> Max deltas values
-         real(bsa_real_t) :: maxF_i, maxF_j
+         real :: maxF_i, maxF_j
 
          !> adjusts deltas to max values specified.
          logical, intent(in), optional :: force
@@ -211,7 +210,7 @@ module BsaLib_MRectZone
          class(MRectZone_t), intent(inout) :: this
          class(MPoint_t), intent(in) :: pt
          character(len=1), optional, intent(in) :: loc
-         real(bsa_real_t), intent(in), optional  :: base_i, base_j
+         real, intent(in), optional  :: base_i, base_j
       end subroutine
 
 
@@ -224,9 +223,9 @@ module BsaLib_MRectZone
 
          class(MRectZone_t), intent(inout) :: this
          class(MPoint_t), intent(in) :: Pi
-         real(bsa_real_t), intent(in) :: coord_val
+         real, intent(in) :: coord_val
          character(len = 1), intent(in) :: coord_ty_ch
-         real(bsa_real_t), intent(in) :: baseval
+         real, intent(in) :: baseval
          character(len = 1), intent(in) :: base_dir
          logical, intent(in)            :: called
       end subroutine
@@ -238,11 +237,11 @@ module BsaLib_MRectZone
 
          class(MRectZone_t), intent(inout) :: this
          class(MPoint_t), intent(in) :: Pi
-         real(bsa_real_t), intent(in) :: coord_val
+         real, intent(in) :: coord_val
          character(len = 1), intent(in) :: coord_ty_ch
-         real(bsa_real_t), intent(in) :: baseval
+         real, intent(in) :: baseval
          character(len = 1), intent(in) :: base_dir
-         real(bsa_real_t), intent(in)          :: dfi, dfj
+         real, intent(in)          :: dfi, dfj
       end subroutine
 
 
@@ -264,7 +263,7 @@ module BsaLib_MRectZone
       ! !> Avoid setting a delta smaller than given limit
       ! elemental module impure subroutine validateDeltas(this, lval)
       !    class(MRectZone_t), intent(inout) :: this
-      !    real(bsa_real_t), intent(in) :: lval
+      !    real, intent(in) :: lval
       ! end subroutine
 
 
@@ -275,7 +274,7 @@ module BsaLib_MRectZone
          class(MRectZone_t), intent(inout) :: this
          class(MPoint_t), intent(in)  :: pt
          character(len=1), intent(in) :: base_dir, known_coord
-         real(bsa_real_t), intent(in) :: coord_val
+         real, intent(in) :: coord_val
       end subroutine
 
 
@@ -285,7 +284,7 @@ module BsaLib_MRectZone
       ! !> zone rotation w.r.t. GRS.
       ! module subroutine getIJfsteps(this, dfIi, dfIj, dfJi, dfJj)
       !    class(MRectZone_t), intent(in) :: this
-      !    real(bsa_real_t), intent(out)  :: dfIi, dfIj, dfJi, dfJj
+      !    real, intent(out)  :: dfIi, dfIj, dfJi, dfJj
       ! end subroutine
 
 
@@ -295,7 +294,7 @@ module BsaLib_MRectZone
       ! module function reconstructZoneBaseMesh(this) result(msh)
       !    class(MRectZone_t), intent(in) :: this
       !    !> BUG: might be 2-rank array instead of 3!
-      !    real(bsa_real_t) :: msh(2, this%nj_, this%ni_)
+      !    real :: msh(2, this%nj_, this%ni_)
       ! end function
 
 
@@ -347,7 +346,7 @@ module BsaLib_MRectZone
          & , pdata )
          class(MRectZone_t), intent(inout) :: this
 #ifndef BSA_USE_POD_DATA_CACHING
-         real(bsa_real_t), intent(in) :: bfm(:, :)
+         real, intent(in) :: bfm(:, :)
 #endif
          class(*), pointer, intent(in) :: pdata
       end subroutine

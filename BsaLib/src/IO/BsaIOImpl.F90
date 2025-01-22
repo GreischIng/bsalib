@@ -40,15 +40,15 @@ contains
       character(len = 64) :: label
       character(len = *), parameter :: fmt_a = '(a)', fmt_i = '(i8)'
       logical :: exists
-      integer(bsa_int_t) :: IUN_BSADATA, i
-      integer(bsa_int_t) :: ret
+      integer :: IUN_BSADATA, i
+      integer :: ret
 
-      integer(bsa_int_t) :: i_suban, i_vers, i_defsc, i_psd, i_bisp, i_onlyd, i_test
-      integer(bsa_int_t) :: i_bispsym, i_3dsym, i_scalar, i_nfreqs
-      real(bsa_real_t)   :: r_df
-      integer(bsa_int_t) :: i_svd, i_bkgrfmt, i_fcov, i_dumpmod
-      real(bsa_real_t)   :: r_bkgaext, r_genpaext, r_maxaext
-      integer(bsa_int_t) :: i_ntc, i_ndirs, tc(3), dirs(3)
+      integer :: i_suban, i_vers, i_defsc, i_psd, i_bisp, i_onlyd, i_test
+      integer :: i_bispsym, i_3dsym, i_scalar, i_nfreqs
+      real   :: r_df
+      integer :: i_svd, i_bkgrfmt, i_fcov, i_dumpmod
+      real   :: r_bkgaext, r_genpaext, r_maxaext
+      integer :: i_ntc, i_ndirs, tc(3), dirs(3)
 
 
       ret = 0

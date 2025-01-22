@@ -15,8 +15,7 @@
 !! along with BsaLib.  If not, see <https://www.gnu.org/licenses/>.
 module BsaLib_M2DPolygZone
 
-   use BsaLib_CONSTANTS, only: int32, bsa_real_t, bsa_int_t &
-                              , CST_PIGREC, CST_PIt2, CST_PId2, CST_PIt3d2
+   use BsaLib_CONSTANTS, only: CST_PIGREC, CST_PIt2, CST_PId2, CST_PIt3d2
    use BsaLib_MPoint,    only: MPoint_t
    use BsaLib_MZone,     only: MZone_t
    implicit none (type, external)
@@ -31,7 +30,7 @@ module BsaLib_M2DPolygZone
       integer :: nj_ = 0
 
       !> Rotation angle w.r.t to XY plane axes (CLOCKWISE)
-      real(bsa_real_t) :: rot_ = 0._bsa_real_t
+      real :: rot_ = 0.
 
    contains
 
@@ -54,9 +53,9 @@ module BsaLib_M2DPolygZone
 
    abstract interface
       elemental function RealVoidFct(this) result(res)
-         import :: M2DPolygZone_t, bsa_real_t
+         import :: M2DPolygZone_t
          class(M2DPolygZone_t), intent(in) :: this
-         real(bsa_real_t) :: res
+         real :: res
       end function
 
       subroutine VoidSub(this)
@@ -94,7 +93,7 @@ contains
 
    subroutine setRotation(this, rot, deg)
       class(M2DPolygZone_t), intent(inout) :: this
-      real(bsa_real_t), value       :: rot
+      real, value       :: rot
       logical, intent(in), optional :: deg
       logical :: is_deg = .false.
       integer :: n2pirot = 0
@@ -128,7 +127,7 @@ contains
 
       bool = .false.
 
-      if (this%rot_ == 0._bsa_real_t .or. &
+      if (this%rot_ == 0. .or. &
           this%rot_ == CST_PId2      .or. &
           this%rot_ == CST_PIGREC    .or. &
           this%rot_ == CST_PIt3d2) bool = .true.
@@ -140,7 +139,7 @@ contains
    !> Sets zone refinements.
    subroutine setRefinements(this, ni, nj, force)
       class(M2DPolygZone_t), intent(inout) :: this
-      integer(bsa_int_t), intent(in) :: ni, nj
+      integer, intent(in) :: ni, nj
       logical, intent(in), optional  :: force
       logical :: do_force = .false.
 
@@ -171,11 +170,11 @@ contains
 
    subroutine getUnaryDeltas(this, dfIi, dfIj, dfJi, dfJj)
       class(M2DPolygZone_t), intent(inout) :: this
-      real(bsa_real_t), intent(out) :: dfIi, dfIj
-      real(bsa_real_t), intent(out) :: dfJi, dfJj
+      real, intent(out) :: dfIi, dfIj
+      real, intent(out) :: dfJi, dfJj
 
-      real(bsa_real_t) :: ang, c, s
-      real(bsa_real_t), intrinsic :: sin, cos
+      real :: ang, c, s
+      real, intrinsic :: sin, cos
 
       if (this%rot_ < CST_PId2) then ! FIRST quadrant
 
