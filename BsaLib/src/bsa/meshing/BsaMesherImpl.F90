@@ -58,7 +58,7 @@ contains
       print '(1x, 2a/)', NOTEMSG, 'Using version with POD caching.'
 #endif
 
-      if (0_int32 /= openBFMDumpFiles_()) call bsa_Abort("Failed to open BFM dump file(s).")
+      if (0_int64 /= openBFMDumpFiles_()) call bsa_Abort("Failed to open BFM dump file(s).")
 
       lflag = settings%i_only_diag_ == 0 .and. settings%i_use_svd_ == 1
 
@@ -194,7 +194,7 @@ contains
             iun = iun + 1
          enddo
          iost = openBFMDumpFile_(iun, bfm_dump_file_name_)
-         if (0_int32 /= iost) return
+         if (0_int64 /= iost) return
          io_units_bfmdump(i) = iun
          if (i == n) exit
          iun = iun + 1   ! NOTE: this to avoid a cycle where we know that unit iun is taken!
@@ -463,8 +463,8 @@ contains
       block
 
          !> Number of main directions ['NORTH', 'EAST ', 'SOUTH', 'WEST ']
-         integer, parameter :: N_DIRS_FULL = 4_int32
-         integer, parameter :: N_DIRS_HALF = 3_int32
+         integer, parameter :: N_DIRS_FULL = 4_int64
+         integer, parameter :: N_DIRS_HALF = 3_int64
          integer :: n_dirs_
 
          !> Main directions labels

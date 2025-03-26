@@ -18,34 +18,34 @@ module data
    use BsaLib
    implicit none (type, external)
    public
-   integer(int32), parameter :: IUN_EXTDATA = 22223
+   integer(int64), parameter :: IUN_EXTDATA = 22223
    logical :: l_formmode = .false.
    logical :: ext_data_read_ = .false.
 
-   integer(int32) :: i_nnodes, i_nlibs, i_nnodesl, i_nlibsl
-   integer(int32), target, allocatable :: nodesl(:), libsl(:)
+   integer(int64) :: i_nnodes, i_nlibs, i_nnodesl, i_nlibsl
+   integer(int64), target, allocatable :: nodesl(:), libsl(:)
    real(real64),   target, allocatable :: nod_cords(:, :)
 
-   integer(int32) :: i_varu, i_su, i_vert, i_degw
-   integer(int32) :: i_nzones
+   integer(int64) :: i_varu, i_su, i_vert, i_degw
+   integer(int64) :: i_nzones
    real(real64)   :: r_aird
    real(real64)   :: r_rotW2G(3, 3)
    real(real64), target, allocatable :: r_Zref_z(:), r_UBref_z(:), r_alph_z(:), r_lims_z(:)
    real(real64), target, allocatable :: r_L_z(:, :, :), r_std_z(:, :), r_corrC_z(:, :, :)
    real(real64), target, allocatable :: r_corrEx_z(:, :, :), r_rotW2G_z(:, :, :), r_incang_z(:)
 
-   integer(int32), target, allocatable :: i_wzNod(:)
+   integer(int64), target, allocatable :: i_wzNod(:)
    real(real64),   target, allocatable :: r_wAltNod(:), r_UBnod(:), r_corrNod(:, :)
 
    real(real64), target, allocatable :: r_wfc(:, :, :)
 
-   integer(int32) :: i_nm, i_ndofs
+   integer(int64) :: i_nm, i_ndofs
    real(real64), target, allocatable :: r_natf(:), r_modm(:, :)
    real(real64), target, allocatable :: r_Mg(:), r_Kg(:), r_Cg(:, :)
    real(real64), target, allocatable :: r_xsist(:), r_xsiad(:)
 
-   integer(int32) :: i_exprt_mode_ = BSA_EXPORT_MODE_REPLACE
-   integer(int32) :: i_exprt_form_ = BSA_EXPORT_FORMAT_FORMATTED
+   integer(int64) :: i_exprt_mode_ = BSA_EXPORT_MODE_REPLACE
+   integer(int64) :: i_exprt_form_ = BSA_EXPORT_FORMAT_FORMATTED
    logical :: export_results_to_files_ = .true.
 
    logical :: is_visual_       = .false.

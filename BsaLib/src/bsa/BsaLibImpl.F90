@@ -626,7 +626,7 @@ contains
          nskip = nskip + 1
 
          ! check at which lib happens the MAX
-         ilocmax = maxloc(abs(struct_data%modal_%phi_(:, i)), kind = int32)
+         ilocmax = maxloc(abs(struct_data%modal_%phi_(:, i)), kind = int64)
          ilib    = mod(ilocmax(1), struct_data%nlibs_)
          if (ilib == 0) ilib = struct_data%nlibs_
          print '(1x, 2a, i0 /)', MSGCONT, 'Its local max abs value is for LIB= ', ilib

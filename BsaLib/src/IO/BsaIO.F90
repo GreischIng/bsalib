@@ -25,13 +25,13 @@ module BsaLib_IO
    !  I/O  UNITs (mutables)
    !**************************************************************************
    ! dumpfile(s)
-   integer, parameter :: IO_BFMDUMP_BASE_UNIT = 1000_int32
+   integer, parameter :: IO_BFMDUMP_BASE_UNIT = 1000_int64
    integer, allocatable, target :: io_units_bfmdump(:)
-   integer :: un_export_bisp_cls_ = 1203_int32
-   integer :: un_export_bisp_msh_ = 1204_int32
+   integer :: un_export_bisp_cls_ = 1203_int64
+   integer :: un_export_bisp_msh_ = 1204_int64
 
    ! debug
-   integer      :: unit_debug_ = 99999_int32
+   integer      :: unit_debug_ = 99999_int64
    character(len = 64) :: BSA_DEBUG_FNAME = 'bsadebug.bsa'
 
 

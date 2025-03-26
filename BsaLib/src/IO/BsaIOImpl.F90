@@ -144,12 +144,12 @@ contains
       write(unit_debug_, fmt) 'USE BISP      SYM  = ',  settings%i_bisp_sym_
       write(unit_debug_, fmt) 'USE 3D MATRIX SYM  = ',  settings%i_spctr_sym_
       write(unit_debug_, fmt) 'N. OF FREQUENCIES  = ',  settings%nfreqs_
-      write(unit_debug_, '("    - ", a, g10.5)') 'DELTA FREQ         = ',  settings%df_
+      write(unit_debug_, '("    - ", a, g12.5)') 'DELTA FREQ         = ',  settings%df_
       write(unit_debug_, fmt) 'USE "SVD" DECOMP   = ',  settings%i_use_svd_
       write(unit_debug_, fmt) 'BKG_BASE_RFMT      = ',  settings%bkg_base_rfmnt_
-      write(unit_debug_, '("    - ", a, g10.5)') 'BKG_AERA_EXT       = ',  settings%bkg_area_ext_
-      write(unit_debug_, '("    - ", a, g10.5)') 'GEN_PEAK_AREA_EXT  = ',  settings%peak_area_ext_
-      write(unit_debug_, '("    - ", a, g10.5)') 'MAX AREA EXTENSION = ',  settings%max_area_ext_
+      write(unit_debug_, '("    - ", a, g12.5)') 'BKG_AERA_EXT       = ',  settings%bkg_area_ext_
+      write(unit_debug_, '("    - ", a, g12.5)') 'GEN_PEAK_AREA_EXT  = ',  settings%peak_area_ext_
+      write(unit_debug_, '("    - ", a, g12.5)') 'MAX AREA EXTENSION = ',  settings%max_area_ext_
       write(unit_debug_, fmt) 'DO FULL COVERAGE   = ',  settings%i_full_coverage_
 
 
@@ -193,15 +193,15 @@ contains
       write(unit_debug_, fmt) 'WIND DIRS   = ', wd%i_ndirs_
       write(unit_debug_, '(*(i5))') wd%dirs_
       write(unit_debug_, fmt) 'WIND SPEEDS = ', size(wd%u_node_)
-      write(unit_debug_, '(*(10("  ", g10.4), /))') wd%u_node_
+      write(unit_debug_, '(*(10("  ", g12.4), /))') wd%u_node_
       write(unit_debug_, fmt) 'NODE W. ZONE= '
-      write(unit_debug_, '(*(10("  ", g10.4), /))') wd%wz_node_
+      write(unit_debug_, '(*(10("  ", g12.4), /))') wd%wz_node_
       write(unit_debug_, fmt) 'NODE W. ALT = '
-      write(unit_debug_, '(*(10("  ", g10.4), /))') wd%wAlt_node_
+      write(unit_debug_, '(*(10("  ", g12.4), /))') wd%wAlt_node_
 
       ! WARNING: creates temporary because of non-contiguous memory..
       write(unit_debug_, fmt) 'NODAL COHER = ', size(wd%nod_corr_, 1)
-      write(unit_debug_, '(*(10("  ", g10.4), /))') wd%nod_corr_(:, 1)
+      write(unit_debug_, '(*(10("  ", g12.4), /))') wd%nod_corr_(:, 1)
 
       write(unit_debug_, fmt) 'W. F. C.    = '
       write(fmt2, '( 2(a, i5), a)') ' ( ', size(wd%wfc_, 2), '(', size(wd%wfc_, 1), '(2x, g10.4), /) )'

@@ -786,10 +786,10 @@ use BsaLib_Data, only: iun_POD_trunc_, do_export_POD_info_
          if (do_export_POD_info_) then
             if (itc == 1 .and. do_export_POD_trunc_(__export_POD_trunc_id__)) then
                !$omp critical
-               write(iun_POD_trunc_) int(__export_POD_trunc_id__, kind=int32)
+               write(iun_POD_trunc_) int(__export_POD_trunc_id__, kind=int64)
                write(iun_POD_trunc_) size(fj)
                write(iun_POD_trunc_) real(fj, kind=real64)
-               write(iun_POD_trunc_) int(size(D_S_uvw_w2), kind=int32)
+               write(iun_POD_trunc_) int(size(D_S_uvw_w2), kind=int64)
                write(iun_POD_trunc_) D_S_uvw_w2
                !$omp end critical
             endif
@@ -1124,7 +1124,7 @@ use BsaLib_Data, only: iun_POD_trunc_, do_export_POD_info_
 
          do inode = 1, NNODESL
 
-            node = int(struct_data%n_load_(inode), kind=int32)
+            node = int(struct_data%n_load_(inode), kind=int64)
 
             posi = (node - 1) * NLIBS
             phi_ = struct_data%modal_%phi_(posi + struct_data%libs_load_, MODES)

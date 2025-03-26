@@ -15,7 +15,7 @@
 !! along with BsaLib.  If not, see <https://www.gnu.org/licenses/>.
 module BsaLib_Utility
 
-   use BsaLib_CONSTANTS, only: INFOMSG, ERRMSG, MSGCONT, WARNMSG, NOTEMSG, int32
+   use BsaLib_CONSTANTS, only: INFOMSG, ERRMSG, MSGCONT, WARNMSG, NOTEMSG, int64
    implicit none (type, external)
    public
    
@@ -67,9 +67,9 @@ contains
       integer :: id
 
       if (nj >= ni) then
-         id = (ni - 1) * tot + nj - int((ni*ni - ni) / 2., kind=int32)
+         id = (ni - 1) * tot + nj - int((ni*ni - ni) / 2., kind=int64)
       else
-         id = (nj - 1) * tot + ni - int((nj*nj - nj) / 2., kind=int32)
+         id = (nj - 1) * tot + ni - int((nj*nj - nj) / 2., kind=int64)
       endif
 
 ! #ifdef BSA_DEBUG

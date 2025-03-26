@@ -567,7 +567,7 @@ contains
       npt = ni * nj
 
       ! BUG: do we really need to divide by real??
-      npt = int((npt + ni) / 2._real32, kind=int32)
+      npt = int((npt + ni) / 2._real32, kind=int64)
    end function
 
 

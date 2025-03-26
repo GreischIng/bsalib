@@ -292,12 +292,12 @@ module BsaLib_Data
    logical          :: nPODmodes_set_ = .false.
 
    !> N. of POD modes to be kept
-   integer :: nmodes_POD_  = 0_int32
+   integer :: nmodes_POD_  = 0_int64
 
    !> If .true., exports POD truncation info to a file.
    logical :: do_export_POD_info_ = .false.
    logical, allocatable :: do_export_POD_trunc_(:)    !<-- BUG: this is because of OMP.
-   integer,     parameter :: iun_POD_trunc_ = 659_int32
+   integer,     parameter :: iun_POD_trunc_ = 659_int64
    character(len = *), parameter :: iun_POD_trunc_fname_ = 'POD_trunc_info.txt'
 
    ! Mesher function pointer (pre/post meshing)

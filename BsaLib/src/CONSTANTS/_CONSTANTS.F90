@@ -18,7 +18,7 @@
 !   BSA  integer/real types selected kinds
 !**************************************************************************************
 
-   integer, parameter :: bsa_int_t  = int32
+   integer, parameter :: bsa_int_t  = int64
    integer, parameter :: bsa_real_t = real64
    
 !**************************************************************************************

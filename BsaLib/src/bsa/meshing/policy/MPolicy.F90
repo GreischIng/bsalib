@@ -15,7 +15,7 @@
 !! along with BsaLib.  If not, see <https://www.gnu.org/licenses/>.
 module BsaLib_MPolicy
 
-   use BsaLib_CONSTANTS, only: int32
+   use BsaLib_CONSTANTS, only: int64
    implicit none (type, external)
    private
    public :: MPolicy_create_default_set
@@ -124,14 +124,14 @@ contains
       integer, intent(in) :: dfi, dfj, interp_bfm_i, interp_bfm_j, interp_brm_i, interp_brm_j, nlevs, id
       type(MPolicy_t) :: pol
 
-      pol%delta_fI_fct_     = int(dfi,           kind=int32)
-      pol%delta_fJ_fct_     = int(dfj,           kind=int32)
-      pol%bfm_pol_%i_fct_   = int(interp_bfm_i,  kind=int32)
-      pol%bfm_pol_%j_fct_   = int(interp_bfm_j,  kind=int32)
-      pol%brm_pol_%i_fct_   = int(interp_brm_i,  kind=int32)
-      pol%brm_pol_%j_fct_   = int(interp_brm_j,  kind=int32)
-      pol%n_interp_bfm_lvs_ = int(nlevs,         kind=int32)
-      pol%id_pol_           = int(id,            kind=int32)
+      pol%delta_fI_fct_     = int(dfi,           kind=int64)
+      pol%delta_fJ_fct_     = int(dfj,           kind=int64)
+      pol%bfm_pol_%i_fct_   = int(interp_bfm_i,  kind=int64)
+      pol%bfm_pol_%j_fct_   = int(interp_bfm_j,  kind=int64)
+      pol%brm_pol_%i_fct_   = int(interp_brm_i,  kind=int64)
+      pol%brm_pol_%j_fct_   = int(interp_brm_j,  kind=int64)
+      pol%n_interp_bfm_lvs_ = int(nlevs,         kind=int64)
+      pol%id_pol_           = int(id,            kind=int64)
    end function
 
 
